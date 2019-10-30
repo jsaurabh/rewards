@@ -15,6 +15,9 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+#Static dir path for bootstrap theme
+PROJECT_DIR = os.path.join(os.path.dirname(__file__))
+STATICFILES_DIRS = [(os.path.join(PROJECT_DIR, "static"))]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -26,7 +29,6 @@ SECRET_KEY = '-_bfqu2=zfsj^5h9_-m)6o0oncmtp+$ph)x0v99kv7w8lejapm'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -55,7 +57,7 @@ ROOT_URLCONF = 'rewards.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
