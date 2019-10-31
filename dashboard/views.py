@@ -8,4 +8,5 @@ from django.views.generic import TemplateView
 class DashView(TemplateView):
     template_name = 'index.html'
 
-    
+# class EmptyView(TemplateView):
+#     template_name = 'blank.html'

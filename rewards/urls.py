@@ -15,9 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from django.views.generic.base import TemplateView
+from django.contrib.auth.decorators import login_required
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dashboard', include('dashboard.urls')),
-    path('', include('home.urls')),
+    path('', TemplateView.as_view(template_name='home.html'), name = 'home'),
+    path('dashboard/', include('dashboard.urls')),
+    path('accounts/', include('accounts.urls')),
+    path("blank", TemplateView.as_view(template_name='blank.html'), name='blank'),
 ]
+
