@@ -26,5 +26,6 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('accounts/', include('accounts.urls')),
     path("blank", TemplateView.as_view(template_name='blank.html'), name='blank'),
+    path("rewards", TemplateView.as_view(template_name='rewards.html'), name='rewards'),
 ]
 
