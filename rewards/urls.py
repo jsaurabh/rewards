@@ -27,5 +27,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path("blank", TemplateView.as_view(template_name='blank.html'), name='blank'),
     path("rewards", TemplateView.as_view(template_name='rewards.html'), name='rewards'),
+    path("rewards/manage", TemplateView.as_view(template_name='manage-rewards.html'), name='rewards'),
+    path("catalog", TemplateView.as_view(template_name='catalog.html'), name='catalog'),
+    
 ]
 

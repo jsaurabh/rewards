@@ -1,0 +1,50 @@
+{% extends 'base_dash.html' %}
+{% load static %}
+{% block content %}
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Rewards</h1>
+            <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+          </div>
+
+                  <!-- Content Row -->
+                  <div class="row">
+
+                    <!-- Grow In Utility -->
+                    <div class="col-lg-6">
+                      <div class="card position-relative">
+                        <div class="card-header py-3">
+                          <h6 class="m-0 font-weight-bold text-primary">Program</h6>
+                        </div>
+                        <div class="card-body">
+                          <div class="mb-3">
+                            <code>Choose Your Rewards Program</code>
+                          </div>
+                          <div class="small mb-1"></div>
+                          <nav class="navbar navbar-expand navbar-light bg-light mb-4">
+                            <a class="navbar-brand" >Program 1</a>
+                            <ul class="navbar-nav ml-auto">
+                              <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Program 1
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="/rewards">Program 2</a>
+                                  <a class="dropdown-item" href="/rewards">Program 3</a>
+                                  <div class="dropdown-divider"></div>
+                                  <a class="dropdown-item" href="/rewards-create">Create New Program</a>
+                                </div>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
+                      </div>
+        
+                    </div>
+                </div>
+                </div>
+{% endblock %}

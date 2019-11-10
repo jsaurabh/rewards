@@ -8,6 +8,10 @@ from django.views.generic import TemplateView, FormView
 class DashView(TemplateView):
     template_name = 'index.html'
 
-class RewardsView(FormView):
-    pass
+# def register_view(request):
+#     form = UsersRegistrationForm(request.POST or None)
+#     if form.is_valid():
+#         return redirect("/")
+#     print("TO DO")
 
+#     return render(request, "accounts/register.html")
