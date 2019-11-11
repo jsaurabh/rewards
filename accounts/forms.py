@@ -18,10 +18,10 @@ class UsersLoginForm(forms.Form):
 		username = self.cleaned_data.get("username")
 		password = self.cleaned_data.get("password")
 		
-		if username and password:
-			user = authenticate(username = username, password = password)
-			if not user:
-				raise forms.ValidationError("Enter valid info")
+		# if username and password:
+		# 	user = authenticate(username = username, password = password)
+		# 	if not user:
+		# 		raise forms.ValidationError("Enter valid info")
 
 		return super(UsersLoginForm, self).clean(*args, **keyargs)
 
