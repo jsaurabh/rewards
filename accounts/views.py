@@ -23,10 +23,18 @@ def login_view(request):
 def register_view(request):
     form = UsersRegistrationForm(request.POST or None)
     if form.is_valid():
+        username = form.cleaned_data.get("username")
+        password = form.cleaned_data.get("password")
+        firstName = form.cleaned_data.get("password")
+        lastName = form.cleaned_data.get("lastName")
+        email = form.cleaned_data.get("email")
+        phone = form.cleaned_data.get("phone")
         return redirect("/")
-    print("TO DO")
-
-    return render(request, "accounts/register.html")
+    return render(request, "accounts/register.html",
+    {
+        "form":form,
+        "title":"Register",
+    })
 
 def logout_view(request):
     if request.user.is_authenticated:

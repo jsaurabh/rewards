@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -105,14 +106,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES':(
-#         'rest_framework.authentication.TokenAuthentication',
-#     ),
-#     'DEFAULT_PERMISSION_CLASSES':(
-#         'rest_framework.permissions.IsAuthenticated',
-#     )
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES':(
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -133,3 +134,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # LOGIN_REDIRECT_URL = "/dashboard"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
