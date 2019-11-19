@@ -31,7 +31,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,9 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dashboard.apps.DashboardConfig',
     'accounts.apps.AccountsConfig',
+    'employees.apps.EmployeesConfig',
     'rest_framework',
     'rest_framework.authtoken',
-    'crispy_forms',
+    'bootstrap_modal_forms',
+    'widget_tweaks',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':(
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES':(
         'rest_framework.permissions.IsAuthenticated',
@@ -120,7 +123,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -133,6 +136,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# LOGIN_REDIRECT_URL = "/dashboard"
+LOGIN_REDIRECT_URL = "/dashboard"
+LOGIN_URL = "/accounts/login"
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# Django Tables 2 Default Bootstrap version
+# https://django-tables2.readthedocs.io/en/latest/pages/custom-rendering.html
+
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"

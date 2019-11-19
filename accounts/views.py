@@ -1,20 +1,19 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages 
 from .forms import UsersLoginForm, UsersRegistrationForm
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect
 import requests, json
-#from django import forms
 from django.views.generic import View
-#from rest_framework.decorators import authentication_classes, permission_classes
-#from rest_framework.permissions import IsAuthenticated
+from dashboard.users import User
 
+#API routes
 LOGIN_URL = "https://webdev.cse.buffalo.edu/rewards/users/auth/login/"
 REGISTER_URL = "https://webdev.cse.buffalo.edu/rewards/users/"
 
 class LoginView(View):
-    #@authentication_classes((TokenAuthentication, ))
-    #permission_classes = (IsAuthenticated, )
     def get(self, request, *args, **kwargs):
+        print(request)
         if request.user.is_authenticated:
             return redirect("/")
         form = UsersLoginForm()
@@ -31,18 +30,29 @@ class LoginView(View):
                 'password': form.cleaned_data.get('password')
             }
             response = requests.post(LOGIN_URL, data = post_data)
+            with open('data.json', 'w', encoding='utf-8') as f:
+                json.dump(json.loads(response.text), f, indent=4)
+
+            user = User(json.loads(response.text))
             token = json.loads(response.text).get('token')
             print(token)
             if token:
-                tokenh = f"Token {token}"
-                headers = {"Authorization": tokenh}
-                response = requests.post(LOGIN_URL, headers = headers, data=post_data)
-                return HttpResponseRedirect("/dashboard")
+                try:
+                    user = authenticate(username = post_data['username'], password = post_data['password'])
+                    login(request, user)
+                    return HttpResponseRedirect("/dashboard")
+                except:
+                    messages.error(request, "Unable to log in with provided credentials")
+                    return render(request, "accounts/login.html", {
+                        "form":form
+                        })
             else:
-                messages.error(request, "Error")
+                messages.error(request, "Please enter valid account data")
+                return render(request, "accounts/login.html", {
+                        "form":form
+                        })
         return render(request, "accounts/login.html", {
             "form":form,
-            "title":'Login'
         })
 
 class RegisterView(View):
@@ -65,50 +75,27 @@ class RegisterView(View):
                 'phone' : form.cleaned_data.get("phone"),
             }
             response = requests.post(REGISTER_URL, data = post_data)
-            token = json.loads(response.text).get('token')
-            return HttpResponseRedirect("/accounts/login")
-        
+            res = json.loads(response.text)
+            if response.status_code == 400:
+                for key in res:
+                    messages.error(request, res[key][0].capitalize())
+                return render(request, "accounts/register.html", {
+                    "form":form, 
+                    "title":"Register"
+        })
+            if response.status_code == 200:
+                token = json.loads(response.text).get('token')
+                print(res)
+                print(token)
+                return HttpResponseRedirect("/accounts/login")
         return render(request, "accounts/register.html", {
             "form":form, 
             "title":"Register"
         })
 
-# Create your views here.
-# def login_view(request):
-#     if request.user.is_authenticated:
-#         return redirect("/")
-#     form = UsersLoginForm(request.POST or None)
-#     if form.is_valid():
-#         account = form.cleaned_data.get('account_number')
-#         password = form.cleaned_data.get('password')
-#         user = authenticate(username = account, password = password)
-#         login(request, user)
-#         return redirect("/dashboard")
-#     return render(request, "accounts/login.html",
-#     {
-#         "form":form,
-#         "title": 'Login',
-#     })
-
-# def register_view(request):
-#     form = UsersRegistrationForm(request.POST or None)
-#     if form.is_valid():
-        # username = form.cleaned_data.get("username")
-        # password = form.cleaned_data.get("password")
-        # firstName = form.cleaned_data.get("password")
-        # lastName = form.cleaned_data.get("lastName")
-        # email = form.cleaned_data.get("email")
-        # phone = form.cleaned_data.get("phone")
-#         return redirect("/")
-#     return render(request, "accounts/register.html",
-#     {
-#         "form":form,
-#         "title":"Register",
-#     })
-
-# def logout_view(request):
-#     if request.user.is_authenticated:
-#         logout(request)
+def logout_view(request):
+    if request.user.is_authenticated:
+        logout(request)
         
-#         return HttpResponseRedirect("/")
-#     return redirect("/")
+        return HttpResponseRedirect("/")
+    return redirect("/")

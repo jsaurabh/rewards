@@ -1,0 +1,67 @@
+{% extends 'base_dash.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+<div class="container-fluid">
+        
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Catalog</h1>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Manage Catalog</h6>
+            </div>
+  <div class="card-body">
+
+      <a class="btn btn-primary btn-icon-split btn-sm" href = "add">
+          <span class="icon text-white-50">
+              <i class="fas fa-plus"></i>
+          </span>
+          <span class="text">Add</span>
+        </a>
+        &nbsp;
+        <a class="btn btn-primary btn-icon-split btn-sm" href = "edit">
+          <span class="icon text-white-50">
+              <i class="fas fa-edit"></i>
+          </span>
+          <span class="text">Edit</span>
+        </a>
+        &nbsp;
+        <a class="btn btn-primary btn-icon-split btn-sm" href = "delete">
+          <span class="icon text-white-50">
+              <i class="fas fa-trash"></i>
+          </span>
+          <span class="text">Delete</span>
+        </a>
+        <p></p>
+      {% render_table table %}
+  </div>
+
+  </div>
+  
+</div>
+
+<!-- <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">Edit the changes you wish to make</div>
+      {{form.as_p}}
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="/dashboard/business">Submit</a>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+{% endblock %} 

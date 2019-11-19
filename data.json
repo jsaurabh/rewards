@@ -1,0 +1,60 @@
+{
+    "token": "f3d3dc8860b844bbf0b384af93a2077048b6853e",
+    "user": {
+        "id": 2,
+        "username": "23456",
+        "first_name": "Two",
+        "last_name": "Six",
+        "email": "rewards-23456@example.org",
+        "phone": null,
+        "customer_of": [
+            {
+                "id": 1,
+                "name": "string",
+                "is_published": true,
+                "phone": "string",
+                "url": "https://example.org",
+                "address": "string",
+                "logo": "/rewards/media/programs/businesses/logos/download_5Q1ZE1t.jpeg"
+            },
+            {
+                "id": 3,
+                "name": "Starbucks Coffee Company",
+                "is_published": true,
+                "phone": "800-782-7282",
+                "url": "https://www.starbucks.com/",
+                "address": "Somewhere, ON, Earth",
+                "logo": "/rewards/media/programs/businesses/logos/Starbucks_Corporation_Logo_2011.png"
+            },
+            {
+                "id": 4,
+                "name": "Tim Hortons",
+                "is_published": true,
+                "phone": "1-888-601-1616",
+                "url": "https://www.timhortons.com/us/en/index.php",
+                "address": "",
+                "logo": "/rewards/media/programs/businesses/logos/Tim_Hortons_logo.png"
+            }
+        ],
+        "employee_of": [
+            {
+                "id": 1,
+                "name": "string",
+                "is_published": true,
+                "phone": "string",
+                "url": "https://example.org",
+                "address": "string",
+                "logo": "/rewards/media/programs/businesses/logos/download_5Q1ZE1t.jpeg"
+            },
+            {
+                "id": 16,
+                "name": "SPOT Coffee",
+                "is_published": true,
+                "phone": "(716) 768-8273",
+                "url": "https://www.spotcoffee.com/",
+                "address": "Buffalo, NY",
+                "logo": null
+            }
+        ]
+    }
+}

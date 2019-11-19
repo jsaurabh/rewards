@@ -30,7 +30,11 @@
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
         <div class="sidebar-brand-icon rotate-n-15">
+          {% if dash.image %}
+            <img src= dash.image alt="Logo" height="42" width="42">
+          {% else %}
           <i class="fab fa-reddit"></i>
+          {% endif %}
         </div>
         <div class="sidebar-brand-text mx-3">My Business</div>
       </a>
@@ -77,26 +81,17 @@
         <div id="collapseCatalogue" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Catalog</h6>
-            <a class="collapse-item" href="/catalog">View Items</a>
             <a class="collapse-item" href="/catalog">Manage Catalog</a>
-            <!-- <a class="collapse-item" href="/blank">Awesome Item 3</a> -->
+            <a class="collapse-item" href="/catalog/items">View Items</a>
           </div>
         </div>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAnalytics" aria-expanded="true" aria-controls="collapseUtilities">
+      <li class = "nav-item">
+        <a class = "nav-link collapsed" href="/blank">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Analytics</span>
         </a>
-        <div id="collapseAnalytics" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Header:</h6>
-            <a class="collapse-item" href="/blank">Awesome Item 1</a>
-            <a class="collapse-item" href="/blank">Awesome Item 2</a>
-            <a class="collapse-item" href="/blank">Awesome Item 3</a>
-          </div>
-        </div>
       </li>
 
       <!-- Divider -->
@@ -108,45 +103,19 @@
       </div>
 
       <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmployees" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
+      <!-- <li class = "nav-item">
+        <a class = "nav-link collapsed" href="/employees">
+          <i class="fas fa-fw fa-wrench"></i>
           <span>Employees</span>
         </a>
-        <div id="collapseEmployees" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Header:</h6>
-            <a class="collapse-item" href="/blank">Awesome Item 1</a>
-            <a class="collapse-item" href="/blank">Awesome Item 2</a>
-            <a class="collapse-item" href="/blank">Awesome Item 3</a>
-            <!-- <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item" href="404.html">404 Page</a>
-            <a class="collapse-item" href="#">Blank Page</a> -->
-          </div>
-        </div>
-      </li>
+      </li> -->
 
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBusiness" aria-expanded="true" aria-controls="collapseUtilities">
+      <li class = "nav-item">
+        <a class = "nav-link collapsed" href="/dashboard/business">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Business</span>
         </a>
-        <div id="collapseBusiness" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Header:</h6>
-            <a class="collapse-item" href="/blank">Manage Business</a>
-            <a class="collapse-item" href="/blank">Create Business</a>
-          </div>
-        </div>
-      </li>
-
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Settings</span></a>
       </li>
 
       <!-- Divider -->
@@ -173,18 +142,6 @@
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
           </button>
-
-          <!-- Topbar Search -->
-          <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
-              </div>
-            </div>
-          </form> -->
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">

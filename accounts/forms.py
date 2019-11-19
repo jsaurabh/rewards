@@ -1,9 +1,8 @@
-from django.contrib.auth import authenticate
 from django import forms
 
 class UsersLoginForm(forms.Form):
-	username = forms.CharField()
-	password = forms.CharField(widget = forms.PasswordInput,)
+	username = forms.CharField(label = 'Username')
+	password = forms.CharField(label = 'Password', widget = forms.PasswordInput())
 
 	def __init__(self, *args, **kwargs):
 		super(UsersLoginForm, self).__init__(*args, **kwargs)
@@ -17,17 +16,12 @@ class UsersLoginForm(forms.Form):
 	def clean(self, *args, **keyargs):
 		username = self.cleaned_data.get("username")
 		password = self.cleaned_data.get("password")
-		
-		# if username and password:
-		# 	user = authenticate(username = username, password = password)
-		# 	if not user:
-		# 		raise forms.ValidationError("Enter valid info")
 
 		return super(UsersLoginForm, self).clean(*args, **keyargs)
 
 class UsersRegistrationForm(forms.Form):
 	username = forms.CharField()
-	password = forms.CharField(widget = forms.PasswordInput, )
+	password = forms.CharField(widget = forms.PasswordInput())
 	first_Name = forms.CharField()
 	last_Name = forms.CharField()
 	email = forms.EmailField()

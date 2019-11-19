@@ -1,0 +1,54 @@
+{% extends 'base_dash.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+<div class="container-fluid">
+        
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Catalog</h1>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Manage Items</h6>
+            </div>
+  <div class="card-body">
+      <form method="post" class="user">
+          {% csrf_token %}
+          <div class="form-group">
+            {{form}} &nbsp;<button type="submit" class="btn btn-primary btn-sm">
+                Submit</button>
+        </form>
+        <p></p>
+      <a class="btn btn-primary btn-icon-split btn-sm" href = "add-items">
+          <span class="icon text-white-50">
+              <i class="fas fa-plus"></i>
+          </span>
+          <span class="text">Add</span>
+        </a>
+        &nbsp;
+        <a class="btn btn-primary btn-icon-split btn-sm" href = "edit-items">
+          <span class="icon text-white-50">
+              <i class="fas fa-edit"></i>
+          </span>
+          <span class="text">Edit</span>
+        </a>
+        &nbsp;
+        <a class="btn btn-primary btn-icon-split btn-sm" href = "delete-items">
+          <span class="icon text-white-50">
+              <i class="fas fa-trash"></i>
+          </span>
+          <span class="text">Delete</span>
+        </a>
+        <p></p>
+        {% render_table table %}
+  </div>
+
+  </div>
+  
+</div>
+
+{% endblock %} 
