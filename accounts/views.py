@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 import requests, json
 from django.views.generic import View
 from dashboard.users import User
+from django.contrib.auth.models import User as U
 
 #API routes
 LOGIN_URL = "https://webdev.cse.buffalo.edu/rewards/users/auth/login/"
@@ -84,10 +85,15 @@ class RegisterView(View):
                     "title":"Register"
         })
             if response.status_code == 200:
-                token = json.loads(response.text).get('token')
-                print(res)
-                print(token)
-                return HttpResponseRedirect("/accounts/login")
+                try:
+                    userobj = U.objects.create_superuser(post_data['username'], post_data['email'], post_data['password'])
+                    token = json.loads(response.text).get('token')
+                    print(res)
+                    print(token)
+                    return HttpResponseRedirect("/accounts/login")
+                except:
+                    print("Superuser can't be created")
+                    
         return render(request, "accounts/register.html", {
             "form":form, 
             "title":"Register"

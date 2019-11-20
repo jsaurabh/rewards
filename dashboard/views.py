@@ -5,12 +5,13 @@ import requests, json
 from django.urls import reverse_lazy
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import CreateView
-from .forms import BusinessCreationForm, BusinessEditForm
+from .forms import BusinessCreationForm, BusinessEditForm, BusinessDeleteForm
 from .users import User
 from .tables import NameTable
-
+from rest_framework.parsers import FileUploadParser
 from django.contrib import messages
 from accounts.forms import UsersLoginForm
+import base64
 
 ## API routes
 CREATE_BUSINESS_URL = EDIT_BUSINESS_URL = "https://webdev.cse.buffalo.edu/rewards/programs/businesses/"
@@ -126,7 +127,76 @@ class BusinessEditView(View):
                 "title": "Edit Business"
             })
 
+class BusinessDeleteView(View):
+    def get(self, request, *args, **kwargs):
+        form = BusinessDeleteForm()
+        return render(request, "deleteBusiness.html", {
+            "form": form,
+            "title": "Delete Business"
+        })
+
+    def post(self, request, *args, **kwargs):
+        form = BusinessDeleteForm(request.POST)
+        if form.is_valid():
+            print("valid")
+            id = form.cleaned_data.get('id')
+            
+            with open('data.json', 'r') as f:
+                data = json.loads(f.read())
+            
+            token = data.get('token')
+            EDIT_URL = EDIT_BUSINESS_URL + str(id) + '/'
+            USER_URL = USER_READ_URL + str(data.get('user').get('id')) + '/'
+
+            if token:
+                print("Got token")
+                tokenh = f"Token {token}"
+                headers = {"Authorization": tokenh}
+                response = requests.delete(EDIT_URL, headers = headers)
+                #res = json.loads(response.text)
+                #print(res)
+                user_response = requests.get(USER_URL, headers = headers)
+                user_data = json.loads(user_response.text)
+                print(user_data)
+                print(user_response)
+                user = User(user_data)
+                data['user'] = user_data
+                with open('data.json', 'w', encoding='utf-8') as f:
+                    json.dump(data, f, indent=4)
+                
+                if response.status_code == 400:
+                    messages.error(request, 'Your business could not be deleted')
+                    return render(request, "deleteBusiness.html", {
+                            "form":form, 
+                            "title":"Delete Business"
+                            })
+                if response.status_code == 405:
+                    messages.error(request, "Your business could not be deleted")
+                    return render(request, "deleteBusiness.html", {
+                            "form":form, 
+                            "title":"Delete Business"
+                            })
+                if response.status_code == 201:
+                    messages.info(request, "Your business was successfully deleted")
+                    return HttpResponseRedirect("/dashboard/business")
+                if response.status_code == 202:
+                    messages.info(request, "Your business was successfully deleted")
+                    return HttpResponseRedirect("/dashboard/business")
+                if response.status_code == 200:
+                    messages.info(request, "Your business was successfully deleted")
+                    return HttpResponseRedirect("/dashboard/business")
+            else:
+                messages.error(request, "Your request could not be completed")
+                return render(request, "deleteBusiness.html", {
+                    "form" : form
+                })
+
+        return render(request, "deleteBusiness.html", {
+                "form": form,
+                "title": "Delete Business"
+            })
 class BusinessCreate(View):
+    #parser_classes = (FileUploadParser,)
     def get(self, request, *args, **kwargs):
         form = BusinessCreationForm()
         return render(request, "newBusiness.html", {
@@ -135,7 +205,10 @@ class BusinessCreate(View):
         })
 
     def post(self, request, *args, **kwargs):
-        form = BusinessCreationForm(request.POST)
+        form = BusinessCreationForm(request.POST, request.FILES)
+        print(request.FILES)
+        print(form.is_valid())
+        logo = request.FILES.get('logo')
         if form.is_valid():
             post_data = {
                 'name':form.cleaned_data.get('name'), 
@@ -143,22 +216,28 @@ class BusinessCreate(View):
                 'is_published': True,
                 'url': form.cleaned_data.get('url'),
                 'address': form.cleaned_data.get('address'),
-                'logo': None
+                #'logo': request.FILES.get('logo')
             }
-           
+            
             with open('data.json', 'r') as f:
                 data = json.loads(f.read())
             token = data.get('token')
+            print(token)
             id = data.get('user').get('id')
+            print(id)
             USER_URL = USER_READ_URL + str(id) + '/'
-
+            print(USER_URL)
+            print(CREATE_BUSINESS_URL)
             if token:
+                print("In Token")
                 tokenh = f"Token {token}"
                 headers = {"Authorization": tokenh}
-                response = requests.post(CREATE_BUSINESS_URL, headers = headers, data = post_data)
+                
+                response = requests.post(CREATE_BUSINESS_URL,
+                    headers = headers, data = post_data)
                 user_response = requests.get(USER_URL, headers = headers)
                 print(user_response)
-                print(response)
+                print(response.text)
                 res = json.loads(response.text)
                 user_data = json.loads(user_response.text)
                 user = User(user_data)
@@ -168,7 +247,7 @@ class BusinessCreate(View):
 
                 if response.status_code == 400:
                     for key in res:
-                        messages.error(request, res[key][0].capitalize())
+                        messages.error(request, res[key][0].title())
                         return render(request, "newBusiness.html", {
                             "form":form, 
                             "title":"Add Business"

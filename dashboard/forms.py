@@ -8,8 +8,8 @@ class BusinessCreationForm(forms.Form):
     phone = forms.CharField(max_length=16)
     url = forms.URLField()
     address = forms.CharField()
-   # logo = forms.ImageField()
-
+    logo = forms.ImageField(required = False)
+    
     def __init__(self, *args, **kwargs):
         super(BusinessCreationForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({
@@ -28,10 +28,10 @@ class BusinessCreationForm(forms.Form):
             'class': 'form-control',
             'name': "URL"
         })
-        # self.fields['logo'].widget.attrs.update({
-        #     'class': 'form-control',
-        #     'name': "Choose Logo"
-        # })
+        self.fields['logo'].widget.attrs.update({
+            'class': 'form-control',
+            'name': "Choose Logo"
+        })
 
         def clean(self, *args, **kwargs):
             name = self.cleaned_data.get("name")
@@ -43,6 +43,16 @@ class BusinessCreationForm(forms.Form):
 
             return super(BusinessCreationForm, self).clean(*args, **kwargs)
 
+class BusinessDeleteForm(forms.Form):
+    id = forms.CharField(label = "Unique identifier")
+    
+    def __init__(self, *args, **kwargs):
+        super(BusinessDeleteForm, self).__init__(*args, **kwargs)
+        self.fields['id'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Business id'
+        })
+
 class BusinessEditForm(forms.Form):
     id = forms.CharField(label = "Unique identifier")
     name = forms.CharField(label='Business Name',
@@ -51,7 +61,7 @@ class BusinessEditForm(forms.Form):
     phone = forms.CharField(max_length=16)
     url = forms.URLField()
     address = forms.CharField()
-   # logo = forms.ImageField()
+    logo = forms.ImageField(required = False)
 
     def __init__(self, *args, **kwargs):
         super(BusinessEditForm, self).__init__(*args, **kwargs)
@@ -75,10 +85,10 @@ class BusinessEditForm(forms.Form):
             'class': 'form-control',
             'name': "URL"
         })
-        # self.fields['logo'].widget.attrs.update({
-        #     'class': 'form-control',
-        #     'name': "Choose Logo"
-        # })
+        self.fields['logo'].widget.attrs.update({
+            'class': 'form-control',
+            'name': "Choose Logo"
+        })
 
         def clean(self, *args, **kwargs):
             id = self.cleaned_data.get('id')
@@ -87,6 +97,6 @@ class BusinessEditForm(forms.Form):
             phone = self.cleaned_data.get("phone")
             address = self.cleaned_data.get("address")
             url = self.cleaned_data.get("url")
-            #logo = self.cleaned_data.get("logo")
+            logo = self.cleaned_data.get("logo")
 
             return super(BusinessEditForm, self).clean(*args, **kwargs)

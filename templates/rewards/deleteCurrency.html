@@ -11,21 +11,21 @@
           <div class="col-lg-7">
             <div class="p-5">
               <div class="text-center">
-                <h1 class="h4 text-gray-900 mb-4">Add New Business</h1>
+                <h1 class="h4 text-gray-900 mb-4">Delete Currency</h1>
               </div>
               {% for message in messages %}
                     {{ message }}
                   {% endfor %}
-                  <form method="post" class="user" enctype="multipart/form-data">
+                  <form method="post" class="user">
                     {% csrf_token %}
                     <div class="form-group">
                       {{ form.as_p }}
                     <button type="submit" class="btn btn-primary btn-user btn-block">
-                      Add Business</button>
+                      Delete</button>
                   </form>
               <hr>
               <div class="text-center">
-                <a class="small" href="/dashboard/business">Back to Dashboard?</a>
+                <a class="small" href="/dashboard/rewards/currency">Back to Dashboard?</a>
               </div>
             </div>
           </div>

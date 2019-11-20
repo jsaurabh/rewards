@@ -23,22 +23,35 @@ class CatalogView(View):
         
         token = data.get('token')
         tokenh = f"Token {token}"
-        #id = data.get('user').get('id')
-        READ_URL = CATEGORY_READ_URL + str(16) + '/'
+        try:
+            id = data.get('user').get('employee_of')[0].get('id')
+            print(id)
+        except:
+            return render(request, 'catalog/items-v.html', {
+                'form': ItemViewForm([]),
+                "table": ItemTable("")
+            })
+        
+        READ_URL = CATEGORY_READ_URL + str(id) + '/'
         headers = {"Authorization": tokenh}
 
         if token:
             user_response = requests.get(READ_URL, headers = headers)
             res = json.loads(user_response.text)
+            print(res)
+            print(len(res))
             categories = []
+            # if res:
+            #     table = CategoryTable(categories)
+            #else:
             for idx, _ in enumerate(res):
-                d = {
-                    'Category_ID' : res[idx].get('id'),
-                    'name': res[idx].get('name'),
-                    # 'items': res[idx].get('items')
-                }
-                categories.append(d)
-
+                    d = {
+                        'Category_ID' : res[idx].get('id'),
+                        'name': res[idx].get('name'),
+                        # 'items': res[idx].get('items')
+                    }
+                    categories.append(d)
+            print(categories)
             table = CategoryTable(categories)
             return render(request, 'catalog/catalog.html', {
             "title": "UB Loyalty | Catalog",
@@ -58,6 +71,8 @@ class AddCategoryView(View):
         })    
 
     def post(self, request, *args, **kwargs):
+        with open('data.json', 'r') as f:
+            data = json.loads(f.read())
         form = AddCategoryForm(request.POST)
         if form.is_valid():
             print("valid")
@@ -65,7 +80,7 @@ class AddCategoryView(View):
             post_data = {
                 "name": form.cleaned_data.get('name'), 
                 #### CHANGE TO CURRENT BUSINESS
-                "business": 16
+                "business": data.get('user').get('employee_of')[0].get('id')
             }
             
             with open('data.json', 'r') as f:
@@ -128,6 +143,9 @@ class EditCategoryView(View):
         })
 
     def post(self, request, *args, **kwargs):
+        with open('data.json', 'r') as f:
+            data = json.loads(f.read())
+        
         form = EditCategoryForm(request.POST)
         if form.is_valid():
             print("valid")
@@ -135,7 +153,7 @@ class EditCategoryView(View):
             post_data = {
                 "name": form.cleaned_data.get('name'), 
                 #### CHANGE TO CURRENT BUSINESS
-                "business": 16
+                "business": data.get('user').get('employee_of')[0].get('id')
             }
             
             with open('data.json', 'r') as f:
@@ -200,6 +218,8 @@ class DeleteCategoryView(View):
         })  
 
     def post(self, request, *args, **kwargs):
+        with open('data.json', 'r') as f:
+            data = json.loads(f.read())
         form = DeleteCategoryForm(request.POST)
         if form.is_valid():
             print("valid")
@@ -271,6 +291,8 @@ class AddItemsView(View):
         })    
 
     def post(self, request, *args, **kwargs):
+        with open('data.json', 'r') as f:
+            data = json.loads(f.read())
         form = AddItems(request.POST)
         if form.is_valid():
             print("valid")
@@ -315,13 +337,13 @@ class AddItemsView(View):
                             })
                 if response.status_code == 201:
                     messages.info(request, "Your item was successfully added")
-                    return HttpResponseRedirect("/catalog/items/")
+                    return HttpResponseRedirect("/catalog/items")
                 if response.status_code == 202:
                     messages.info(request, "Your item was successfully added")
-                    return HttpResponseRedirect("/catalog/items/")
+                    return HttpResponseRedirect("/catalog/items")
                 if response.status_code == 200:
                     messages.info(request, "Your item was successfully added")
-                    return HttpResponseRedirect("/catalog/items/")    
+                    return HttpResponseRedirect("/catalog/items")    
             else:
                 messages.error(request, "Your request could not be completed")
                 return render(request, "catalog/add-items.html", {
@@ -341,6 +363,8 @@ class EditItemsView(View):
         }) 
 
     def post(self, request, *args, **kwargs):
+        with open('data.json', 'r') as f:
+            data = json.loads(f.read())
         form = EditItems(request.POST)
         if form.is_valid():
             print("valid")
@@ -485,19 +509,32 @@ class ItemView(View):
         
         token = data.get('token')
         tokenh = f"Token {token}"
-        id = 16 ###SELECT BUSINESS HERE
+        try:
+            id = data.get('user').get('employee_of')[0].get('id')
+        except:
+            return render(request, 'catalog/items-v.html', {
+                'form': ItemViewForm([]),
+                "table": ItemTable("")
+            })
         USER_URL = CATEGORY_READ_URL + str(id) + '/'
         headers = {"Authorization": tokenh}
 
         if token:
             response = requests.get(USER_URL, headers = headers)
             res = json.loads(response.text)
-            #print(res)
+            print(res)
+            # if res:
+            #     self.categories = []
+            
             for idx, val in enumerate(res):
                 n = val.get('name') + " ID: " + str(val.get('id'))
                 self.categories.append((val.get('id'), n))
             form = ItemViewForm(self.categories)
-            table = ItemTable(res[0].get('items'))
+            
+            if self.categories == []:
+                table = ItemTable("")
+            else:
+                table = ItemTable(res[0].get('items'))
             return render(request, 'catalog/items-v.html', {
              "title": "UB Loyalty | Items",
              "form" : form, 

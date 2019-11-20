@@ -38,7 +38,7 @@ var myLineChart = new Chart(ctx, {
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
       borderColor: "rgba(78, 115, 223, 1)",
-      pointRadius: 3,
+      pointRadius: 1,
       pointBackgroundColor: "rgba(78, 115, 223, 1)",
       pointBorderColor: "rgba(78, 115, 223, 1)",
       pointHoverRadius: 3,
@@ -46,7 +46,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+      data: [0, 1000, 2500, 3500, 5000, 6000, 10000, 10000, 12000, 14000, 15000, 16000],
     }],
   },
   options: {
@@ -74,8 +74,8 @@ var myLineChart = new Chart(ctx, {
       }],
       yAxes: [{
         ticks: {
-          maxTicksLimit: 5,
-          padding: 10,
+          maxTicksLimit: 3,
+          padding: 5,
           // Include a dollar sign in the ticks
           callback: function(value, index, values) {
             return '$' + number_format(value);

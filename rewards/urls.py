@@ -23,12 +23,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home.html'), name = 'home'),
     path('dashboard/', include('dashboard.urls')),
-    path('accounts/', include('accounts.urls')),
+    path('accounts/', include(('accounts.urls', 'accounts'), namespace="account")),
     path('employees/', include('employees.urls')),
     path('catalog/', include('catalog.urls')),
-    path('catalog/', include('reward.urls')),
+    path('rewards/', include('reward.urls')),
     path("blank", TemplateView.as_view(template_name='blank.html'), name='blank'),
-    #path("rewards", TemplateView.as_view(template_name='rewards.html'), name='rewards'),
+    path("profile", TemplateView.as_view(template_name='blank.html'), name='profile'),
     #path("rewards/manage", TemplateView.as_view(template_name='manage-rewards.html'), name='rewards'),
 ]
 
