@@ -1,7 +1,7 @@
 {% extends 'accounts_base.html' %}
 {% load static %}
 {% block content %}
-
+{% load widget_tweaks %}
   <div class="container">
     <!-- Outer Row -->
     <div class="row justify-content-center">
@@ -19,10 +19,45 @@
                   {% for message in messages %}
                     {{ message }}
                   {% endfor %}
+                  {% if form.non_field_errors %}
+                  <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
                   <form method="post" class="user">
                     {% csrf_token %}
+                    {% for field in form.visible_fields %}
                     <div class="form-group">
-                      {{form.as_p }}
+                        <p>
+                        {% if field.field.required %}
+                        <strong>
+                          *{{ field.label_tag }}                  
+                        </strong>
+                              
+                        {%else %}
+                          {{ field.label_tag }}
+                        {% endif %}
+                        
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <small class="form-text text-danger">
+                              {{ error }}
+                            </small>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
+                        {% if field.help_text %}
+                          <small class="form-text text-info">
+                            {{ field.help_text }}
+                          </small>
+                        {% endif %}
+                      </p>
+                    </div>
+                    {% endfor %}
                     <button type="submit" class="btn btn-primary btn-user btn-block">
                       Login</button>
                   </form>
