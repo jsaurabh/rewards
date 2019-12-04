@@ -1,0 +1,11 @@
+{
+    "currency": [
+        {
+            "id": 67,
+            "singular_label": "XMAS",
+            "plural_label": "XMAS",
+            "label": "XMAS",
+            "business": 51
+        }
+    ]
+}

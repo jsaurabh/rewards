@@ -3,8 +3,8 @@ from phonenumber_field.formfields import PhoneNumberField
 from django.utils.safestring import mark_safe
 
 class UsersLoginForm(forms.Form):
-	username = forms.CharField(label = mark_safe("<strong>Username</strong>"), required = False, max_length=150, min_length=1)
-	password = forms.CharField(label = mark_safe("<strong>Password</strong>"), required = False, widget = forms.PasswordInput())
+	username = forms.CharField(label = mark_safe("<strong>*Username</strong>"), required = False, max_length=150, min_length=1)
+	password = forms.CharField(label = mark_safe("<strong>*Password</strong>"), required = False, widget = forms.PasswordInput())
 
 	def __init__(self, *args, **kwargs):
 		super(UsersLoginForm, self).__init__(*args, **kwargs)
@@ -35,9 +35,9 @@ class UsersLoginForm(forms.Form):
 class UsersRegistrationForm(forms.Form):
 	# error_css_class = 'error'
 	required_css_class = 'required'
-	username = forms.CharField(label = mark_safe("<strong>Username</strong>"), required = False, max_length=150, min_length=1)
-	password = forms.CharField(label = mark_safe("<strong>Password</strong>"), required = False, help_text = "8 characters or more", widget = forms.PasswordInput())
-	confirm_password = forms.CharField(label = mark_safe("<strong>Confirm Password</strong>"), required = False, widget = forms.PasswordInput())
+	username = forms.CharField(label = mark_safe("<strong>*Username</strong>"), required = False, max_length=150, min_length=1)
+	password = forms.CharField(label = mark_safe("<strong>*Password</strong>"), required = False, help_text = "8 characters or more", widget = forms.PasswordInput())
+	confirm_password = forms.CharField(label = mark_safe("<strong>*Confirm Password</strong>"), required = False, widget = forms.PasswordInput())
 	first_Name = forms.CharField(label = "First Name", required = False, max_length=30)
 	last_Name = forms.CharField(label = "Last Name", required = False, max_length=150)
 	email = forms.EmailField(required = False, max_length = 254)

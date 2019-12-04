@@ -84,6 +84,9 @@ class RegisterView(View):
                 'phone' : number
             } 
             response = requests.post(REGISTER_URL, data = post_data)
+            user_response = requests
+            with open('data.json', 'w', encoding='utf-8') as f:
+                json.dump(json.loads(response.text), f, indent=4)
             res = json.loads(response.text)
             print(response.status_code)
             print(res)
@@ -91,7 +94,6 @@ class RegisterView(View):
                 for key in res:
                     for val in res[key]:
                         form.add_error(key, val.capitalize())
-                        #messages.error(request, val.capitalize())
                 return render(request, "accounts/register.html", {
                     "form":form, 
                     "title":"Register"
@@ -107,7 +109,10 @@ class RegisterView(View):
                     try:
                         user = authenticate(username = post_data['username'], password = post_data['password'])
                         login(request, user)
-                        return HttpResponseRedirect("/dashboard")
+                        if res.get('user').get('employee_of') is None:
+                            return HttpResponseRedirect("/dashboard/wizard")
+                        else:
+                            return HttpResponseRedirect("/dashboard")
                     except:
                         print("Unable to log user in with provided credentials")
                         messages.error(request, "Unable to log in with provided credentials")

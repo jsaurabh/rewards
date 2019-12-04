@@ -12,6 +12,7 @@ from rest_framework.parsers import FileUploadParser
 from django.contrib import messages
 from accounts.forms import UsersLoginForm
 import base64
+from formtools.wizard.views import SessionWizardView
 
 ## API routes
 CREATE_BUSINESS_URL = EDIT_BUSINESS_URL = "https://webdev.cse.buffalo.edu/rewards/programs/businesses/"
@@ -51,6 +52,7 @@ class BusinessView(View):
 class BusinessEditView(View):
     def get(self, request, *args, **kwargs):
         form = BusinessEditForm()
+    
         return render(request, "editBusiness.html", {
             "form": form,
             "title": "Edit Business"
@@ -59,12 +61,12 @@ class BusinessEditView(View):
     def post(self, request, *args, **kwargs):
         form = BusinessEditForm(request.POST)
         if form.is_valid():
-            print("valid")
+            print(form.cleaned_data)
             post_data = {
-                'id': form.cleaned_data.get('id'),
+                'id': form.cleaned_data.get('business'),
                 'name':form.cleaned_data.get('name'), 
                 'phone': form.cleaned_data.get('phone'),
-                'is_published': True,
+                'is_published': form.cleaned_data.get('publish'),
                 'url': form.cleaned_data.get('url'),
                 'address': form.cleaned_data.get('address'),
                 'logo': None
@@ -108,16 +110,13 @@ class BusinessEditView(View):
                             "title":"Edit Business"
                             })
                 if response.status_code == 201:
-                    messages.info(request, "Your business was successfully edited")
                     return HttpResponseRedirect("/dashboard/business")
                 if response.status_code == 202:
-                    messages.info(request, "Your business was successfully edited")
                     return HttpResponseRedirect("/dashboard/business")
                 if response.status_code == 200:
-                    messages.info(request, "Your business was successfully edited")
                     return HttpResponseRedirect("/dashboard/business")
             else:
-                messages.error(request, "Your request could not be completed")
+                form.add_error(None, "Your request could not be completed")
                 return render(request, "editBusiness.html", {
                     "form" : form
                 })
@@ -138,8 +137,9 @@ class BusinessDeleteView(View):
     def post(self, request, *args, **kwargs):
         form = BusinessDeleteForm(request.POST)
         if form.is_valid():
-            print("valid")
-            id = form.cleaned_data.get('id')
+            #print(form)
+            print(form.cleaned_data)
+            id = form.cleaned_data.get('business')
             
             with open('data.json', 'r') as f:
                 data = json.loads(f.read())
@@ -149,23 +149,21 @@ class BusinessDeleteView(View):
             USER_URL = USER_READ_URL + str(data.get('user').get('id')) + '/'
 
             if token:
-                print("Got token")
                 tokenh = f"Token {token}"
                 headers = {"Authorization": tokenh}
                 response = requests.delete(EDIT_URL, headers = headers)
-                #res = json.loads(response.text)
-                #print(res)
+                print(response)
+                
                 user_response = requests.get(USER_URL, headers = headers)
                 user_data = json.loads(user_response.text)
-                print(user_data)
-                print(user_response)
+
                 user = User(user_data)
                 data['user'] = user_data
                 with open('data.json', 'w', encoding='utf-8') as f:
                     json.dump(data, f, indent=4)
                 
                 if response.status_code == 400:
-                    messages.error(request, 'Your business could not be deleted')
+                    form.add_error(None, 'Your business could not be deleted')
                     return render(request, "deleteBusiness.html", {
                             "form":form, 
                             "title":"Delete Business"
@@ -185,6 +183,8 @@ class BusinessDeleteView(View):
                 if response.status_code == 200:
                     messages.info(request, "Your business was successfully deleted")
                     return HttpResponseRedirect("/dashboard/business")
+                if response.status_code == 204:
+                    return HttpResponseRedirect("/dashboard/business")
             else:
                 messages.error(request, "Your request could not be completed")
                 return render(request, "deleteBusiness.html", {
@@ -195,6 +195,7 @@ class BusinessDeleteView(View):
                 "form": form,
                 "title": "Delete Business"
             })
+
 class BusinessCreate(View):
     #parser_classes = (FileUploadParser,)
     def get(self, request, *args, **kwargs):
@@ -205,10 +206,10 @@ class BusinessCreate(View):
         })
 
     def post(self, request, *args, **kwargs):
-        form = BusinessCreationForm(request.POST, request.FILES)
-        print(request.FILES)
+        form = BusinessCreationForm(request.POST)#, request.FILES)
+        #print(request.FILES)
         print(form.is_valid())
-        logo = request.FILES.get('logo')
+        #logo = request.FILES.get('logo')
         if form.is_valid():
             post_data = {
                 'name':form.cleaned_data.get('name'), 
@@ -240,7 +241,7 @@ class BusinessCreate(View):
                 print(response.text)
                 res = json.loads(response.text)
                 user_data = json.loads(user_response.text)
-                user = User(user_data)
+                #user = User(user_data)
                 data['user'] = user_data
                 with open('data.json', 'w', encoding='utf-8') as f:
                     json.dump(data, f, indent=4)
@@ -253,10 +254,10 @@ class BusinessCreate(View):
                             "title":"Add Business"
                             })
                 if response.status_code == 201:
-                    messages.info(request, "Your business was successfully added")
+                    
                     return HttpResponseRedirect("/dashboard/business")
                 if response.status_code == 202:
-                    messages.info(request, "Your business was successfully added")
+                    
                     return HttpResponseRedirect("/dashboard/business")
             else:
                 messages.error(request, "Please ensure you are logged in")
@@ -265,3 +266,21 @@ class BusinessCreate(View):
         return render(request, "newBusiness.html", {
             "form":form,
         })
+
+class FormWizardView(SessionWizardView):
+    template_name = "wizard.html"
+    form_list = [BusinessCreationForm, BusinessEditForm, BusinessDeleteForm]
+    
+    # def get(self, request, *args, **kwargs):
+    #     pass
+    def done(self, form_list, **kwargs):
+        form_data = process_data(form_list)
+        return render(self.request, 'done.html', {
+            'form_data': form_data,
+        })
+    
+def process_data(form_list):
+    form_data = [form.cleaned_data for form in form_list]
+    return form_data
+
+    

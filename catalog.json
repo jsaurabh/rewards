@@ -1,0 +1,26 @@
+[
+    {
+        "id": 41,
+        "items": [],
+        "name": "Alcohol",
+        "business": 51
+    },
+    {
+        "id": 42,
+        "items": [],
+        "name": "Beverages",
+        "business": 51
+    },
+    {
+        "id": 43,
+        "items": [],
+        "name": "Food",
+        "business": 51
+    },
+    {
+        "id": 46,
+        "items": [],
+        "name": "Miscellaneous",
+        "business": 51
+    }
+]

@@ -1,13 +1,23 @@
 {
-    "token": "5a56eed7dda8f813a42f577d8bbf72f02535912a",
+    "token": "c34bbef8b7afb334a93314a2f696ac80c3f96ce6",
     "user": {
-        "id": 44,
-        "username": "facebook1",
+        "id": 48,
+        "username": "facebook99",
         "first_name": "",
         "last_name": "",
-        "email": "j.saur95@gmail.com",
-        "phone": "+17167170692",
+        "email": "",
+        "phone": null,
         "customer_of": [],
-        "employee_of": []
+        "employee_of": [
+            {
+                "id": 51,
+                "name": "SPOT",
+                "is_published": false,
+                "phone": "",
+                "url": "",
+                "address": "",
+                "logo": null
+            }
+        ]
     }
 }

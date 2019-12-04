@@ -41,12 +41,15 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'accounts.apps.AccountsConfig',
     'employees.apps.EmployeesConfig',
+    'catalog.apps.CatalogConfig',
+    'reward.apps.RewardConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'bootstrap_modal_forms',
     'widget_tweaks',
     'django_tables2',
     'phonenumber_field',
+    'formtools'
 ]
 
 MIDDLEWARE = [

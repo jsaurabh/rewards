@@ -13,15 +13,12 @@
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Add Currency</h1>
               </div>
-              {% for message in messages %}
-                    {{ message }}
-                  {% endfor %}
-                  <form method="post" class="user">
-                    {% csrf_token %}
-                    <div class="form-group">
-                      {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary btn-user btn-block">
-                      Add</button>
+
+              <form method="post" class="user" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {% include 'form.html' with form=form %}
+                <button type="submit" class="btn btn-primary btn-user btn-block">
+                  Add</button>
                   </form>
               <hr>
               <div class="text-center">

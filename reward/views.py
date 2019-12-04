@@ -10,6 +10,7 @@ import requests, json
 from django.views.generic import View
 from dashboard.users import User
 from .tables import CurrencyTable, CampaignTable, AccRulesTable, RedRulesTable
+from ast import literal_eval
 
 # API routes
 CURRENCY_URL = "https://webdev.cse.buffalo.edu/rewards/programs/currencies/"
@@ -23,7 +24,11 @@ class RewardsView(View):
         with open('data.json', 'r') as f:
             data = json.loads(f.read())
         
+        with open('currency.json', 'r') as f:
+            curr = json.loads(f.read())
+
         token = data.get('token')
+        biz = data.get('user').get('employee_of')[0].get('id')
         tokenh = f"Token {token}"
 
         headers = {"Authorization": tokenh}
@@ -34,16 +39,19 @@ class RewardsView(View):
             campaigns = []
             #print(res)
             for idx, _ in enumerate(res):
-                d = {
+                if res[idx].get('business') == biz:
+                    d = {
                     'id' : res[idx].get('id'),
                     'name': res[idx].get('name'),
                     'start': res[idx].get('starts_at'),
                     'end' : res[idx].get('ends_at'),
                     'expiry': res[idx].get('points_expire_after'),
-                    'business': res[idx].get('business'),
-                    'currency': res[idx].get('currency')
-                }
-                campaigns.append(d)
+                    'business': data.get('user').get('employee_of')[0].get('name'),
+                    'currency': curr["currency"][0].get('label')}
+                    campaigns.append(d)
+            
+            with open('campaigns.json', 'w', encoding = 'utf-8') as f:
+                json.dump(campaigns, f, indent= 4)
             print(campaigns)
             table = CampaignTable(campaigns)
             return render(request, 'rewards/rewards.html', {
@@ -53,6 +61,37 @@ class RewardsView(View):
 
     def post(self, request, *args, **kwargs):
         pass
+
+class RulesView(View):
+    def get(self, request, *args, **kwargs):
+        with open('data.json', 'r') as f:
+            data = json.loads(f.read())
+        
+        token = data.get('token')
+        tokenh = f"Token {token}"
+
+        headers = {"Authorization": tokenh}
+
+        if token:
+            user_response = requests.get(ACC_RULES, headers = headers)
+            res = json.loads(user_response.text)
+            accRules = []
+            #print(res)
+            # for idx, _ in enumerate(res):
+            #     d = {
+            #         'id' : res[idx].get('id'),
+            #         'value': res[idx].get('value'),
+            #         'campaign': res[idx].get('campaign'),
+            #         'category' : res[idx].get('category'),
+            #         'item': res[idx].get('item'),
+            #     }
+            #     accRules.append(d)
+            
+            # table = AccRulesTable(accRules)
+            return render(request, 'rewards/Rules.html', {
+            "title": "UB Loyalty | Currency"
+            # "table" : table 
+        })
 
 class DeleteCampaign(View):
     def get(self, request, *args, **kwargs):
@@ -66,7 +105,7 @@ class DeleteCampaign(View):
         form = DeleteCampaignForm(request.POST)
         if form.is_valid():
             print("valid")
-            id = form.cleaned_data.get('id')
+            id = form.cleaned_data.get('choose_campaign')
 
             with open('data.json', 'r') as f:
                 data = json.loads(f.read())
@@ -161,19 +200,19 @@ class AddCampaign(View):
                 print(res)
                 
                 if response.status_code == 404:
-                    messages.error(request, "Please check the currency exists")
+                    form.add_error(None, "Please check the currency exists")
                     return render(request, "rewards/addCampaign.html", {
                         "form": form,
                         "title": "Add Campaign"
                     })
                 if response.status_code == 400:
-                    messages.error(request, "Please check the currency exists")
+                    form.add_error(None, "Please check the currency exists")
                     return render(request, "rewards/addCampaign.html", {
                         "form":form, 
                         "title":"Add Campaign"
                         })
                 if response.status_code == 405:
-                    messages.error(request, "Please check permission access")
+                    form.add_error(None, "Please check permission access")
                     return render(request, "rewards/addCampaign.html", {
                             "form":form, 
                             "title":"Add Campaign"
@@ -191,7 +230,7 @@ class AddCampaign(View):
                     messages.info(request, "Your campaign was successfully added")
                     return HttpResponseRedirect("/rewards/")    
             else:
-                messages.error(request, "Your request could not be completed")
+                form.add_error(None, "Your request could not be completed")
                 return render(request, "rewards/addCampaign.html", {
                     "form" : form
                 })
@@ -212,7 +251,7 @@ class EditCampaign(View):
         form = EditCampaignForm(request.POST)
         if form.is_valid():
             print("valid")
-            id = form.cleaned_data.get('id')
+            id = form.cleaned_data.get('choose_campaign')
 
             post_data = {
                 "name": form.cleaned_data.get('name'),
@@ -276,6 +315,43 @@ class EditCampaign(View):
                 "form": form,
                 "title": "Edit Campaign"
             })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class AccRulesView(View):
     def get(self, request, *args, **kwargs):
@@ -534,6 +610,96 @@ class EditAccRules(View):
                 "title": "Edit Accumulation Rules"
             })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class RedRulesView(View):
     def get(self, request, *args, **kwargs):
         with open('data.json', 'r') as f:
@@ -790,6 +956,17 @@ class EditRedRules(View):
                 "title": "Edit Redemption Rules"
             })
 
+
+
+
+
+
+
+
+
+
+
+
 class CurrencyView(View):
     def get(self, request, *args, **kwargs):
         with open('data.json', 'r') as f:
@@ -798,22 +975,25 @@ class CurrencyView(View):
         token = data.get('token')
         tokenh = f"Token {token}"
 
-        CURRENCY_URL
         headers = {"Authorization": tokenh}
 
         if token:
             user_response = requests.get(CURRENCY_URL, headers = headers)
             res = json.loads(user_response.text)
             categories = []
-            print(res)
+
             for idx, _ in enumerate(res):
-                d = {
-                    'id' : res[idx].get('id'),
-                    'singular': res[idx].get('singular_label'),
-                    'plural': res[idx].get('plural_label'),
-                    'business' : res[idx].get('business')
-                }
-                categories.append(d)
+                temp = res[idx].get('business')
+                with open('data.json', 'r') as f:
+                    data = json.loads(f.read())
+            
+                biz = data.get('user').get('employee_of')[0].get('id')
+                if temp == biz:
+                    d = {
+                    'label': res[idx].get('label'),
+                    'business' : data.get('user').get('employee_of')[0].get('name')
+                    }
+                    categories.append(d)
 
             table = CurrencyTable(categories)
             return render(request, 'rewards/currency.html', {
@@ -836,7 +1016,7 @@ class DeleteCurrency(View):
         form = DeleteCurrencyForm(request.POST)
         if form.is_valid():
             print("valid")
-            id = form.cleaned_data.get('id')
+            id = form.cleaned_data.get('currency')
             
             with open('data.json', 'r') as f:
                 data = json.loads(f.read())
@@ -851,42 +1031,40 @@ class DeleteCurrency(View):
                 headers = {"Authorization": tokenh}
                 response = requests.delete(EDIT_URL, headers = headers)
                 print(response.status_code)
-                # res = json.loads(response.text)
-                # print(response)
-                # print(res)
+
                 
                 if response.status_code == 404:
-                    messages.error(request, "Please check the category exists")
+                    form.add_error(None, "Please check the currency exists")
                     return render(request, "rewards/deleteCurrency.html", {
                         "form": form,
                         "title": "Delete Currency"
                     })
                 if response.status_code == 400:
-                    messages.error(request, "Please check the category exists")
+                    form.add_error(None, "Please check the currency exists")
                     return render(request, "rewards/deleteCurrency.html", {
                         "form":form, 
                         "title":"Delete Currency"
                         })
                 if response.status_code == 405:
-                    messages.error(request, "Please check permission access")
+                    form.add_error(None, "Please check permission access")
                     return render(request, "rewards/deleteCurrency.html", {
                             "form":form, 
                             "title":"Delete Currency"
                             })
                 if response.status_code == 204:
-                    messages.info(request, "The category was successfully deleted")
+                    
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 201:
-                    messages.info(request, "Your category was successfully deleted")
+                    
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 202:
-                    messages.info(request, "Your category was successfully deleted")
+                    
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 200:
-                    messages.info(request, "Your category was successfully deleted")
+                    
                     return HttpResponseRedirect("/rewards/currency")    
             else:
-                messages.error(request, "Your request could not be completed")
+                form.add_error(None, "Your request could not be completed")
                 return render(request, "rewards/deleteCurrency.html", {
                     "form" : form
                 })
@@ -907,11 +1085,9 @@ class AddCurrency(View):
         form = AddCurrencyForm(request.POST)
         if form.is_valid():
             print("valid")
-            #id = form.cleaned_data.get('id')
 
             post_data = {
-                "singular_label": form.cleaned_data.get('singular_label'),
-                "plural_label" : form.cleaned_data.get('plural_label'),
+                "label": form.cleaned_data.get('label'),
                 "business": form.cleaned_data.get("business")
             }
             
@@ -926,41 +1102,50 @@ class AddCurrency(View):
                 headers = {"Authorization": tokenh}
                 response = requests.post(CURRENCY_URL, headers = headers, data = post_data)
                 print(response)
+
+                with open('currency.json') as f:
+                    try:
+                        data = json.load(f)
+                        print("Done")
+                    except ValueError:
+                        data = {}
+                        data['currency'] = []
+                
+                new = eval(response.text)
+                data['currency'].append(new)
+                with open('currency.json', 'w', encoding='utf-8') as f:
+                    f.write(json.dumps(data, indent=4))
+
                 res = json.loads(response.text)
-                print(res)
                 
                 if response.status_code == 404:
-                    messages.error(request, "Please check the currency exists")
+                    form.add_error(None, "Please check the currency exists")
                     return render(request, "rewards/addCurrency.html", {
                         "form": form,
                         "title": "Add Currency"
                     })
                 if response.status_code == 400:
-                    messages.error(request, "Please check the currency exists")
+                    form.add_error(None, "Please check the currency exists")
                     return render(request, "rewards/addCurrency.html", {
                         "form":form, 
                         "title":"Add Currency"
                         })
                 if response.status_code == 405:
-                    messages.error(request, "Please check permission access")
+                    form.add_error(None, "Please check permission access")
                     return render(request, "rewards/addCurrency.html", {
                             "form":form, 
                             "title":"Add Currency"
                             })
                 if response.status_code == 204:
-                    messages.info(request, "The currency was successfully edited")
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 201:
-                    messages.info(request, "Your currency was successfully edited")
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 202:
-                    messages.info(request, "Your currency was successfully edited")
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 200:
-                    messages.info(request, "Your currency was successfully edited")
                     return HttpResponseRedirect("/rewards/currency")    
             else:
-                messages.error(request, "Your request could not be completed")
+                form.add_error(None, "Your request could not be completed")
                 return render(request, "rewards/addCurrency.html", {
                     "form" : form
                 })
@@ -981,11 +1166,10 @@ class EditCurrency(View):
         form = EditCurrencyForm(request.POST)
         if form.is_valid():
             print("valid")
-            id = form.cleaned_data.get('id')
+            id = form.cleaned_data.get('currency')
 
             post_data = {
-                "singular_label": form.cleaned_data.get('singular_label'),
-                "plural_label" : form.cleaned_data.get('plural_label'),
+                "label": form.cleaned_data.get('new_label'),
                 "business": form.cleaned_data.get("business")
             }
             
@@ -1001,42 +1185,56 @@ class EditCurrency(View):
                 tokenh = f"Token {token}"
                 headers = {"Authorization": tokenh}
                 response = requests.put(EDIT_URL, headers = headers, data = post_data)
-                print(response)
+                #print(response)
                 res = json.loads(response.text)
-                print(res)
+                #print(res)
+                
+                currency_response = requests.get(CURRENCY_URL, headers = headers)
+                curr_res = json.loads(currency_response.text)
+                #print(curr_res)
+
+                # with open('currency.json') as f:
+                #     data = {}
+                #     data['currency'] = []
+                #     for item in curr_res:
+                #         if item['business'] == res['business']:
+                #             data['currency'].append(item)
+                
+                # with open('currency.json', 'w', encoding='utf-8') as f:
+                #             f.write(json.dump(data, f, indent=4))
                 
                 if response.status_code == 404:
-                    messages.error(request, "Please check the currency exists")
+                    form.add_error(None, "Please check the currency exists")
                     return render(request, "rewards/editCurrency.html", {
                         "form": form,
                         "title": "Edit Currency"
                     })
                 if response.status_code == 400:
-                    messages.error(request, "Please check the currency exists")
+                    form.add_error(None, "Please check the currency exists")
                     return render(request, "rewards/editCurrency.html", {
                         "form":form, 
                         "title":"Edit Currency"
                         })
                 if response.status_code == 405:
-                    messages.error(request, "Please check permission access")
+                    form.add_error(None, "Please check permission access")
                     return render(request, "rewards/editCurrency.html", {
                             "form":form, 
                             "title":"Edit Currency"
                             })
                 if response.status_code == 204:
-                    messages.info(request, "The currency was successfully edited")
+                    
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 201:
-                    messages.info(request, "Your currency was successfully edited")
+                    
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 202:
-                    messages.info(request, "Your currency was successfully edited")
+                    
                     return HttpResponseRedirect("/rewards/currency")
                 if response.status_code == 200:
-                    messages.info(request, "Your currency was successfully edited")
+                    
                     return HttpResponseRedirect("/rewards/currency")    
             else:
-                messages.error(request, "Your request could not be completed")
+                form.add_error(None, "Your request could not be completed")
                 return render(request, "rewards/editCurrency.html", {
                     "form" : form
                 })

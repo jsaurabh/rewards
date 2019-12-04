@@ -1,11 +1,12 @@
 from django.urls import path
-from .views import RewardsView, AccRulesView, RedRulesView, DeleteCampaign, AddCampaign, EditCampaign, CurrencyView
+from .views import RewardsView, AccRulesView, RedRulesView, DeleteCampaign, AddCampaign, EditCampaign, CurrencyView, RulesView
 from .views import DeleteAccRules, AddAccRules, EditAccRules
 from .views import DeleteRedRules, AddRedRules, EditRedRules
 from .views import DeleteCurrency, AddCurrency, EditCurrency
 
 urlpatterns = [
     path("", RewardsView.as_view(), name = "rewardDashboard"),
+    path("Rules", RulesView.as_view(), name = "rulesDashboard"),
     path("accRules", AccRulesView.as_view(), name = "itemsDashboard"),
     path("redRules", RedRulesView.as_view(), name = "itemsDashboard"),
     path("currency", CurrencyView.as_view(), name = "currencyDashboard"),
