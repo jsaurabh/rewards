@@ -35,7 +35,7 @@ class UsersLoginForm(forms.Form):
 class UsersRegistrationForm(forms.Form):
 	# error_css_class = 'error'
 	required_css_class = 'required'
-	username = forms.CharField(label = mark_safe("<strong>*Username</strong>"), required = False, max_length=150, min_length=1)
+	username = forms.CharField(label = mark_safe("<strong>*Username</strong>"), required = False, max_length=150, min_length=3)
 	password = forms.CharField(label = mark_safe("<strong>*Password</strong>"), required = False, help_text = "8 characters or more", widget = forms.PasswordInput())
 	confirm_password = forms.CharField(label = mark_safe("<strong>*Confirm Password</strong>"), required = False, widget = forms.PasswordInput())
 	first_Name = forms.CharField(label = "First Name", required = False, max_length=30)

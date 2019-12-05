@@ -1,5 +1,6 @@
 import django_tables2 as tables
 from django_tables2 import TemplateColumn
+import itertools
 
 class CurrencyTable(tables.Table):
     business = tables.Column(verbose_name = 'Business Name')
@@ -19,19 +20,36 @@ class CampaignTable(tables.Table):
         template_name = "django_tables2/bootstrap-responsive.html"
 
 class AccRulesTable(tables.Table):
+    row_number = tables.Column(empty_values=(), verbose_name= "Sr. No")
     value = tables.Column(verbose_name= 'Value($)')
     campaign = tables.Column(verbose_name= 'Campaign')
     category = tables.Column(verbose_name= 'Category')
     item = tables.Column(verbose_name= 'Item')
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.counter = itertools.count(start=1)
+
+    def render_row_number(self):
+        return "%d" % next(self.counter)
+
+    
     class Meta:
         template_name = "django_tables2/bootstrap-responsive.html"
 
 class RedRulesTable(tables.Table):
-    reward = tables.Column(verbose_name= 'Reward ')
+    row_number = tables.Column(empty_values=(), verbose_name= "Sr. No")
+    reward = tables.Column(verbose_name= 'Reward')
     #image = tables.Column(verbose_name= 'Campaign ID')
-    value = tables.Column(verbose_name= 'Dollar Spend')
-    campaign = tables.Column(verbose_name= 'Campaign ID')
+    value = tables.Column(verbose_name= 'Value($)')
+    campaign = tables.Column(verbose_name= 'Campaign')
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.counter = itertools.count(start=1)
+
+    def render_row_number(self):
+        return "%d" % next(self.counter)
+
     class Meta:
         template_name = "django_tables2/bootstrap-responsive.html"

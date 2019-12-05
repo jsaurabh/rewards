@@ -1,8 +1,8 @@
 {
-    "token": "c34bbef8b7afb334a93314a2f696ac80c3f96ce6",
+    "token": "0e144ddef0851a48abbc2c63a0dc54ddb20dcf90",
     "user": {
-        "id": 48,
-        "username": "facebook99",
+        "id": 53,
+        "username": "UBDemoDay",
         "first_name": "",
         "last_name": "",
         "email": "",
@@ -10,9 +10,9 @@
         "customer_of": [],
         "employee_of": [
             {
-                "id": 51,
-                "name": "SPOT",
-                "is_published": false,
+                "id": 69,
+                "name": "SPOT Coffee",
+                "is_published": true,
                 "phone": "",
                 "url": "",
                 "address": "",

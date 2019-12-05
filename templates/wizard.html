@@ -38,21 +38,19 @@
                                 {% else %}
                                 {% render_field field class="form-control" %}
                                 {% endif %}
-
                                     <small class="form-text text-info">
                                         {{ field.help_text }}
                                     </small>
-                                    
                                 {% endfor %}
                                 {% endif %}
                             </p>
                                     
                         {% if wizard.steps.prev %}
-                        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">"first step"</button>
-                        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">"prev step"</button>
+                        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">First Step</button>
+                        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Prev Step</button>
                         {% endif %}
 
-                        <input type="submit" value = "submit"/>
+                        <input type="submit" value = "Submit"/>
                       </form>
                   <hr>
                 </div>

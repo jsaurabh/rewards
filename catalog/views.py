@@ -522,7 +522,7 @@ class ItemView(View):
 
             return render(request, 'catalog/items-v.html', {
              "title": "UB Loyalty | Items",
-             "form" : form, 
+             #"form" : form, 
              "table": table
         })
     

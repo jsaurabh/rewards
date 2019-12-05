@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import CreateView
 from .forms import BusinessCreationForm, BusinessEditForm, BusinessDeleteForm
+from .forms import BusinessCreateWizard, AddCurrencyWizard, AddCatalogWizard
 from .users import User
 from .tables import NameTable
 from rest_framework.parsers import FileUploadParser
@@ -71,7 +72,7 @@ class BusinessEditView(View):
                 'address': form.cleaned_data.get('address'),
                 'logo': None
             }
-            
+            post_data['phone'] = post_data['phone'].as_e164
             with open('data.json', 'r') as f:
                 data = json.loads(f.read())
             
@@ -220,6 +221,9 @@ class BusinessCreate(View):
                 #'logo': request.FILES.get('logo')
             }
             
+            if post_data['phone']:
+                post_data['phone'] = post_data['phone'].as_e164
+
             with open('data.json', 'r') as f:
                 data = json.loads(f.read())
             token = data.get('token')
@@ -248,19 +252,17 @@ class BusinessCreate(View):
 
                 if response.status_code == 400:
                     for key in res:
-                        messages.error(request, res[key][0].title())
+                        form.add_error(None, res[key][0].title())
                         return render(request, "newBusiness.html", {
                             "form":form, 
                             "title":"Add Business"
                             })
                 if response.status_code == 201:
-                    
                     return HttpResponseRedirect("/dashboard/business")
                 if response.status_code == 202:
-                    
                     return HttpResponseRedirect("/dashboard/business")
             else:
-                messages.error(request, "Please ensure you are logged in")
+                form.add_error(None, "Please ensure you are logged in")
                 return redirect("accounts/login")
 
         return render(request, "newBusiness.html", {
@@ -269,7 +271,7 @@ class BusinessCreate(View):
 
 class FormWizardView(SessionWizardView):
     template_name = "wizard.html"
-    form_list = [BusinessCreationForm, BusinessEditForm, BusinessDeleteForm]
+    form_list = [BusinessCreateWizard, AddCurrencyWizard, AddCatalogWizard]
     
     # def get(self, request, *args, **kwargs):
     #     pass

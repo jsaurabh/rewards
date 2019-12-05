@@ -227,17 +227,18 @@ class EditCurrencyForm(forms.Form):
             'name': 'Business Name',
         })
 
+
 class AddAccRulesForm(forms.Form):
-    required_css_class = 'required'
-    
+
     value = forms.IntegerField(label = mark_safe("<strong>Value</strong>"), max_value=4294967295, min_value=0)
     campaign = forms.ChoiceField(choices=[])
-    category = forms.ChoiceField(choices=[])
-    item = forms.ChoiceField(choices=[])
-    # campaign = forms.IntegerField(label = mark_safe("<strong>*Campaign</strong>"), help_text = "Choose Campaign", required = False)
-    # category = forms.IntegerField(label = mark_safe("<strong>*Category</strong>"), help_text = "Choose Category", required = False)
-    # item = forms.IntegerField(label = mark_safe("<strong>*Item</strong>"), help_text = "Choose Item", required = False)
+    CHOICES = [('C', 'Category'), ('I', 'Item')]
 
+    category = forms.ChoiceField(choices=[], help_text = "Choose either one of category or item to apply the rule to", required = False)
+    item = forms.ChoiceField(choices=[], required = False)
+    
+    rule = forms.ChoiceField(label = mark_safe("Rule Scope"), choices = CHOICES, help_text = "Determines what level the rules are applied at")
+    
     def __init__(self, *args, **kwargs):
         super(AddAccRulesForm, self).__init__(*args, **kwargs)
 
@@ -245,28 +246,83 @@ class AddAccRulesForm(forms.Form):
             'class': 'form-control',
             'name': 'Value'
         })
+        with open('campaigns.json', 'r') as f:
+            data = json.loads(f.read())
+        choices = []
+        for choice in data:
+            #print(choice)
+            choices.append((choice['id'], choice['name']))
+        self.initial['campaign'] = 'None'
+        self.fields['campaign'] = forms.ChoiceField(choices=choices)
         self.fields['campaign'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Campaign ID'
+            'name': 'Choose Campaign',
         })
+
+        with open('catalog.json', 'r') as f:
+            data = json.loads(f.read())
+        
+        choices = []
+        for choice in data:
+            choices.append((choice['id'], choice['name']))
+
+        self.initial['category'] = 'None'
+        self.fields['category'] = forms.ChoiceField(choices=choices)
         self.fields['category'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Category ID'
+            'name': 'Catalog',
         })
+
+        with open('catalog.json', 'r') as f:
+            data = json.loads(f.read())
+        
+        choices = []
+        for choice in data:
+            items = choice['items']
+            for idx, item in enumerate(items):
+                print(idx, item['id'], item['name'])
+                choices.append((item['id'], item['name']))
+
+        self.initial['item'] = 'None'
+        self.fields['item'] = forms.ChoiceField(choices=choices)
         self.fields['item'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Item'
+            'name': 'Catalog',
         })
 
-class EditAccRulesForm(forms.Form):
-    value = forms.IntegerField(label = mark_safe("<strong>Value</strong>"), max_value=4294967295, min_value=0)
-    campaign = forms.ChoiceField(choices=[])
-    category = forms.ChoiceField(choices=[])
-    item = forms.ChoiceField(choices=[])
-    # campaign = forms.IntegerField(label = mark_safe("<strong>*Campaign</strong>"), help_text = "Choose Campaign", required = False)
-    # category = forms.IntegerField(label = mark_safe("<strong>*Category</strong>"), help_text = "Choose Category", required = False)
-    # item = forms.IntegerField(label = mark_safe("<strong>*Item</strong>"), help_text = "Choose Item", required = False)
+        self.fields['rule'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Rule Choice'
+        })
 
+    def clean(self, *args, **kwargs):
+        value = self.cleaned_data.get("value")
+        choice = self.cleaned_data.get("rule")
+        category = self.cleaned_data.get("category")
+        item = self.cleaned_data.get("item")
+        
+        if choice == "C":
+            item = None
+        else:
+            category = None
+        if not value:
+            self.add_error('value', "Value cannot be blank")
+
+        return super(AddAccRulesForm, self).clean(*args, **kwargs)
+
+class EditAccRulesForm(forms.Form):
+    campaign = forms.ChoiceField(choices=[])
+    category = forms.ChoiceField(choices=[], help_text = "Choose either one of category or item to apply the rule to", required = False)
+    item = forms.ChoiceField(choices=[], required = False)
+    
+    rule_choice = forms.ChoiceField(choices=[], label = mark_safe("<strong>Choose Rule</strong>"),)
+    value = forms.IntegerField(label = mark_safe("<strong>Value</strong>"), max_value=4294967295, min_value=0)
+    
+    CHOICES = [('C', 'Category'), ('I', 'Item')]
+
+    
+    rule = forms.ChoiceField(label = mark_safe("Rule Scope"), choices = CHOICES, help_text = "Determines what level the rules are applied at")
+    
     def __init__(self, *args, **kwargs):
         super(EditAccRulesForm, self).__init__(*args, **kwargs)
 
@@ -274,36 +330,105 @@ class EditAccRulesForm(forms.Form):
             'class': 'form-control',
             'name': 'Value'
         })
+        with open('campaigns.json', 'r') as f:
+            data = json.loads(f.read())
+        choices = []
+        for choice in data:
+            choices.append((choice['id'], choice['name']))
+        self.initial['campaign'] = 'None'
+        self.fields['campaign'] = forms.ChoiceField(choices=choices)
         self.fields['campaign'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Campaign ID'
-        })
-        self.fields['category'].widget.attrs.update({
-            'class': 'form-control',
-            'name': 'Category ID'
-        })
-        self.fields['item'].widget.attrs.update({
-            'class': 'form-control',
-            'name': 'Item'
+            'name': 'Choose Campaign',
         })
 
+        with open('catalog.json', 'r') as f:
+            data = json.loads(f.read())
+        
+        choices = []
+        for choice in data:
+            choices.append((choice['id'], choice['name']))
+
+        self.initial['category'] = 'None'
+        self.fields['category'] = forms.ChoiceField(choices=choices)
+        self.fields['category'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Catalog',
+        })
+
+        with open('catalog.json', 'r') as f:
+            data = json.loads(f.read())
+        
+        choices = []
+        for choice in data:
+            items = choice['items']
+            for idx, item in enumerate(items):
+                print(idx, item['id'], item['name'])
+                choices.append((item['id'], item['name']))
+
+        self.initial['item'] = 'None'
+        self.fields['item'] = forms.ChoiceField(choices=choices)
+        self.fields['item'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Catalog',
+        })
+
+        with open('rules.json', 'r') as f:
+            data = json.loads(f.read())
+        choices = []
+        for choice in data:
+            choices.append((choice['id'], choice['value']))
+        self.initial['rule_choice'] = 'None'
+        self.fields['rule_choice'] = forms.ChoiceField(choices=choices)
+        self.fields['rule_choice'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Choose Value',
+        })
+
+        self.fields['rule'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Rule Choice'
+        })
+
+    def clean(self, *args, **kwargs):
+        value = self.cleaned_data.get("value")
+        choice = self.cleaned_data.get("rule")
+        category = self.cleaned_data.get("category")
+        item = self.cleaned_data.get("item")
+        
+        if choice == "C":
+            item = None
+        else:
+            category = None
+        if not value:
+            self.add_error('value', "Value cannot be blank")
+
+        return super(EditAccRulesForm, self).clean(*args, **kwargs)
+
 class DeleteAccRulesForm(forms.Form):
-    Rule = forms.ChoiceField(choices=[])
+    rule_choice = forms.ChoiceField(choices=[], label = mark_safe("<strong>Choose Rule</strong>"))
     
     def __init__(self, *args, **kwargs):
         super(DeleteAccRulesForm, self).__init__(*args, **kwargs)
-        self.fields['Rule'].widget.attrs.update({
+        with open('rules.json', 'r') as f:
+            data = json.loads(f.read())
+        choices = []
+        for choice in data:
+            choices.append((choice['id'], choice['value']))
+        self.initial['rule_choice'] = 'None'
+        self.fields['rule_choice'] = forms.ChoiceField(choices=choices)
+        self.fields['rule_choice'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Rule ID'
+            'name': 'Choose Value',
         })
 
 class AddRedRulesForm(forms.Form):
 
-    reward = forms.CharField(label = 'Reward', max_length=20, min_length=1)
+    reward = forms.CharField(label = mark_safe("<strong>Reward</strong>"), max_length=20, min_length=1, required = False, help_text = "Brief description of the reward")
+    value = forms.IntegerField(label = mark_safe("<strong>Value</strong>"), max_value=4294967295, min_value=0, required = False)
+    campaign = forms.ChoiceField(choices=[], required = False)
     #image = forms.ImageField(label = 'Image')
-    value = forms.IntegerField(label = 'Value', max_value= 4294967295, min_value=0)
-    campaign = forms.IntegerField(label = 'Campaign', )
-
+    
     def __init__(self, *args, **kwargs):
         super(AddRedRulesForm, self).__init__(*args, **kwargs)
 
@@ -315,28 +440,52 @@ class AddRedRulesForm(forms.Form):
         #     'class': 'form-control',
         #     'name': 'Image'
         # })
+
         self.fields['value'].widget.attrs.update({
             'class': 'form-control',
             'name': 'Value'
         })
+        with open('campaigns.json', 'r') as f:
+            data = json.loads(f.read())
+        choices = []
+        for choice in data:
+            #print(choice)
+            choices.append((choice['id'], choice['name']))
+        self.initial['campaign'] = 'None'
+        self.fields['campaign'] = forms.ChoiceField(choices=choices)
         self.fields['campaign'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Campaign ID'
+            'name': 'Choose Campaign',
         })
+
+    def clean(self, *args, **kwargs):
+        reward = self.cleaned_data.get('reward')
+
+        if not reward:
+            self.add_error("reward", "Reward cannot be left blank")
 
 class EditRedRulesForm(forms.Form):
-    id = forms.IntegerField(label = "ID")
-    reward = forms.CharField(label = 'Reward', max_length=20, min_length=1)
+    campaign = forms.ChoiceField(choices=[], required = False)
+    reward_choice = forms.ChoiceField(choices = [], help_text = "Choose existing reward to modify")
+    reward = forms.CharField(label = mark_safe("<strong>Reward</strong>"), max_length=20, min_length=1, required = False, help_text = "Brief description of the reward")
+    value = forms.IntegerField(label = mark_safe("<strong>Value</strong>"), max_value=4294967295, min_value=0, required = False)
     #image = forms.ImageField(label = 'Image')
-    value = forms.IntegerField(label = 'Value', max_value= 4294967295, min_value=0)
-    campaign = forms.IntegerField(label = 'Campaign', )
-
+    
     def __init__(self, *args, **kwargs):
         super(EditRedRulesForm, self).__init__(*args, **kwargs)
-        self.fields['id'].widget.attrs.update({
+
+        with open('campaigns.json', 'r') as f:
+            data = json.loads(f.read())
+        choices = []
+        for choice in data:
+            choices.append((choice['id'], choice['name']))
+        self.initial['campaign'] = 'None'
+        self.fields['campaign'] = forms.ChoiceField(choices=choices)
+        self.fields['campaign'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Rule ID'
+            'name': 'Choose Campaign',
         })
+
         self.fields['reward'].widget.attrs.update({
             'class': 'form-control',
             'name': 'Reward ID'
@@ -345,22 +494,47 @@ class EditRedRulesForm(forms.Form):
         #     'class': 'form-control',
         #     'name': 'Image'
         # })
+
         self.fields['value'].widget.attrs.update({
             'class': 'form-control',
             'name': 'Value'
         })
-        self.fields['campaign'].widget.attrs.update({
+
+        with open('redRules.json', 'r') as f:
+            data = json.loads(f.read())
+        choices = []
+        for choice in data:
+            print(choice)
+            choices.append((choice['id'], choice['value']))
+        self.initial['reward_choice'] = 'None'
+        self.fields['reward_choice'] = forms.ChoiceField(choices=choices)
+        self.fields['reward_choice'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Campaign ID'
+            'name': 'Choose Existig Reward',
         })
 
+    def clean(self, *args, **kwargs):
+        reward = self.cleaned_data.get('reward')
+
+        if not reward:
+            self.add_error("reward", "Reward cannot be left blank")
+
 class DeleteRedRulesForm(forms.Form):
-    Rule = forms.ChoiceField(choices=[])
+    rule_choice = forms.ChoiceField(choices = [], label = mark_safe("<strong>Choose Rule</strong>"), required = False)
     
     def __init__(self, *args, **kwargs):
         super(DeleteRedRulesForm, self).__init__(*args, **kwargs)
-        self.fields['Rule'].widget.attrs.update({
+        
+        with open('redRules.json', 'r') as f:
+            data = json.loads(f.read())
+        choices = []
+        for choice in data:
+            print(choice)
+            choices.append((choice['id'], choice['value']))
+        self.initial['rule_choice'] = 'None'
+        self.fields['rule_choice'] = forms.ChoiceField(choices=choices)
+        self.fields['rule_choice'].widget.attrs.update({
             'class': 'form-control',
-            'name': 'Rule ID'
+            'name': 'Choose Rule',
         })
         

@@ -1,11 +1,11 @@
 [
     {
-        "id": 26,
-        "name": "XMAS1",
+        "id": 47,
+        "name": "SPOT Coffee rewards",
         "start": null,
         "end": null,
         "expiry": null,
-        "business": "SPOT",
-        "currency": "XMAS"
+        "business": "SPOT Coffee",
+        "currency": "Points"
     }
 ]
