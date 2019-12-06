@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages 
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 import requests, json
 from django.urls import reverse_lazy
@@ -10,7 +9,6 @@ from .forms import BusinessCreateWizard, AddCurrencyWizard
 from .users import User
 from .tables import NameTable
 from rest_framework.parsers import FileUploadParser
-from django.contrib import messages
 from accounts.forms import UsersLoginForm
 import base64
 from formtools.wizard.views import SessionWizardView
@@ -102,14 +100,14 @@ class BusinessEditView(View):
                 
                 if response.status_code == 400:
                     for key in res:
-                        messages.error(request, res[key][0].capitalize())
+                        form.add_error(None, res[key][0].capitalize())
                         return render(request, "editBusiness.html", {
                             "form":form, 
                             "title":"Edit Business"
                             })
                 if response.status_code == 405:
                     for key in res:
-                        messages.error(request, res[key][0].capitalize())
+                        form.add_error(None, res[key][0].capitalize())
                         return render(request, "editBusiness.html", {
                             "form":form, 
                             "title":"Edit Business"
@@ -174,24 +172,21 @@ class BusinessDeleteView(View):
                             "title":"Delete Business"
                             })
                 if response.status_code == 405:
-                    messages.error(request, "Your business could not be deleted")
+                    form.add_error(None, "Your business could not be deleted")
                     return render(request, "deleteBusiness.html", {
                             "form":form, 
                             "title":"Delete Business"
                             })
                 if response.status_code == 201:
-                    messages.info(request, "Your business was successfully deleted")
                     return HttpResponseRedirect("/dashboard/business")
                 if response.status_code == 202:
-                    messages.info(request, "Your business was successfully deleted")
                     return HttpResponseRedirect("/dashboard/business")
                 if response.status_code == 200:
-                    messages.info(request, "Your business was successfully deleted")
                     return HttpResponseRedirect("/dashboard/business")
                 if response.status_code == 204:
                     return HttpResponseRedirect("/dashboard/business")
             else:
-                messages.error(request, "Your request could not be completed")
+                form.add_error(None, "Your request could not be completed")
                 return render(request, "deleteBusiness.html", {
                     "form" : form
                 })
@@ -335,9 +330,7 @@ class FormWizardView(SessionWizardView):
         response = requests.post(CAMPAIGN_URL, headers = headers, data = form_data[1])
         print(response, response.text)
 
-        return render(self.request, 'done.html', {
-            'form_data': form_data,
-        })
+        return render(self.request, 'index.html')
     
 def process_data(form_list):
     form_data = [form.cleaned_data for form in form_list]

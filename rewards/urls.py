@@ -27,8 +27,8 @@ urlpatterns = [
     path('employees/', include('employees.urls')),
     path('catalog/', include('catalog.urls')),
     path('rewards/', include('reward.urls')),
+    path('users/', include('users.urls')),
     path("blank", TemplateView.as_view(template_name='blank.html'), name='blank'),
-    path("profile", TemplateView.as_view(template_name='blank.html'), name='profile'),
-    #path("rewards/manage", TemplateView.as_view(template_name='manage-rewards.html'), name='rewards'),
+    path("profile", TemplateView.as_view(template_name='index.html'), name='profile'),
 ]
 
