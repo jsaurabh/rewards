@@ -1,11 +1,11 @@
 [
     {
-        "id": 47,
-        "name": "SPOT Coffee rewards",
-        "start": null,
-        "end": null,
-        "expiry": null,
-        "business": "SPOT Coffee",
-        "currency": "Points"
+        "id": 51,
+        "name": "XMAS",
+        "starts_at": "2019-12-07T00:00:00-05:00",
+        "ends_at": "2020-01-01T00:00:00-05:00",
+        "points_expire_after": null,
+        "business": 71,
+        "currency": 91
     }
 ]

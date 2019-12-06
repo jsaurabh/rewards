@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import CreateView
 from .forms import BusinessCreationForm, BusinessEditForm, BusinessDeleteForm
-from .forms import BusinessCreateWizard, AddCurrencyWizard, AddCatalogWizard
+from .forms import BusinessCreateWizard, AddCurrencyWizard
 from .users import User
 from .tables import NameTable
 from rest_framework.parsers import FileUploadParser
@@ -18,6 +18,7 @@ from formtools.wizard.views import SessionWizardView
 ## API routes
 CREATE_BUSINESS_URL = EDIT_BUSINESS_URL = "https://webdev.cse.buffalo.edu/rewards/programs/businesses/"
 USER_READ_URL = "https://webdev.cse.buffalo.edu/rewards/users/"
+CAMPAIGN_URL = "https://webdev.cse.buffalo.edu/rewards/programs/campaigns/"
 
 class DashView(TemplateView):
     template_name = 'index.html'
@@ -37,7 +38,10 @@ class BusinessView(View):
             user_response = requests.get(USER_URL, headers = headers)
             res = json.loads(user_response.text)
             data['user'] = res
-            businesses = res.get('employee_of')
+            try:
+                businesses = res.get('employee_of')
+            except:
+                businesses = {}
             table = NameTable(businesses)
             return render(request, 'business.html', {
             "title": "UB Loyalty | Business",
@@ -271,12 +275,66 @@ class BusinessCreate(View):
 
 class FormWizardView(SessionWizardView):
     template_name = "wizard.html"
-    form_list = [BusinessCreateWizard, AddCurrencyWizard, AddCatalogWizard]
+    form_list = [BusinessCreateWizard, AddCurrencyWizard]
     
     # def get(self, request, *args, **kwargs):
     #     pass
     def done(self, form_list, **kwargs):
         form_data = process_data(form_list)
+        #print(form_data)
+
+        with open('data.json') as f:
+            data = json.loads(f.read())
+
+        token = data.get('token')
+        id = data.get('user').get('id')
+
+        if token:
+            tokenh = f"Token {token}"
+            headers = {"Authorization": tokenh}
+
+        USER_URL = USER_READ_URL + str(id) + '/'
+
+        #######
+        ## Process first step of the form
+
+        if form_data[0].get('phone'):
+            form_data[0]['phone'] = form_data[0].get('phone').as_e164
+    
+        response = requests.post(CREATE_BUSINESS_URL,
+                    headers = headers, data = form_data[0])
+        user_response = requests.get(USER_URL, headers = headers)
+        #print(response)
+        res = json.loads(response.text)
+        print(res)
+        user_data = json.loads(user_response.text)
+        data['user'] = user_data
+
+        with open('data.json', 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=4)
+
+        #######
+        ## Process second step of the form
+
+        biz = res.get('id')
+        print(biz)
+
+        r = requests.get(url = "http://127.0.0.1:8000/rewards/currency")
+
+        with open('currency.json', 'r') as f:
+            data = json.loads(f.read())
+
+        for item in data['currency']: 
+            if item['business'] == biz:
+                id = item['id']
+
+        form_data[1]['business'] = biz
+        form_data[1]['currency'] = id
+        print(form_data[1])
+
+        response = requests.post(CAMPAIGN_URL, headers = headers, data = form_data[1])
+        print(response, response.text)
+
         return render(self.request, 'done.html', {
             'form_data': form_data,
         })

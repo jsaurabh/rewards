@@ -10590,7 +10590,19 @@ a:focus {
 }
 
 .bg-register-image {
-  background: url("https://source.unsplash.com/Mv9hjnEUHR4/600x800");
+  background: url("../img/portfolio/open.jpeg");
+  background-position: center;
+  background-size: cover;
+}
+
+.bg-catalog-image {
+  background: url("https://source.unsplash.com/N23rmTcf0NA");
+  background-position: center;
+  background-size: cover;
+}
+
+.bg-rules-image {
+  background: url("https://source.unsplash.com/-1_RZL8BGBM");
   background-position: center;
   background-size: cover;
 }

@@ -3,11 +3,11 @@ from django.views.generic.base import TemplateView
 from .views import DashView, BusinessCreate, BusinessEditView, BusinessView, BusinessDeleteView
 from django.contrib.auth.decorators import login_required
 
-from .forms import BusinessCreateWizard, AddCurrencyWizard, AddCatalogWizard
+from .forms import BusinessCreateWizard, AddCurrencyWizard
 from .views import FormWizardView
 
 urlpatterns = [
-    path("wizard", FormWizardView.as_view([BusinessCreateWizard, AddCurrencyWizard, AddCatalogWizard]), name = "dashboard1"),
+    path("wizard", FormWizardView.as_view([BusinessCreateWizard, AddCurrencyWizard]), name = "dashboard1"),
     path("", login_required(DashView.as_view()), name = "dash"),
     path("business", BusinessView.as_view(), name = "business"),   
     path("add", BusinessCreate.as_view(), name = 'add_business'),

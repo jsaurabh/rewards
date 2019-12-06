@@ -22,49 +22,68 @@ RED_RULES = "https://webdev.cse.buffalo.edu/rewards/rewards/redemption-rules/"
 class RewardsView(View):
     def get(self, request, *args, **kwargs):
         with open('data.json', 'r') as f:
-            data = json.loads(f.read())
+            user_data = json.loads(f.read())
         
-        try:
-            with open('currency.json', 'r') as f:
-                curr = json.loads(f.read())
-        except:
-            curr = ""
-        token = data.get('token')
-        try:
-            biz = data.get('user').get('employee_of')[0].get('id')
-        except:
-            biz = ""
+        token = user_data.get('token')
         tokenh = f"Token {token}"
-
         headers = {"Authorization": tokenh}
 
         if token:
             user_response = requests.get(CAMPAIGN_URL, headers = headers)
             res = json.loads(user_response.text)
             campaigns = []
+            campaigns.append(res)
+
             #print(res)
-            for idx, _ in enumerate(res):
-                if res[idx].get('business') == biz:
-                    d = {
-                    'id' : res[idx].get('id'),
-                    'name': res[idx].get('name'),
-                    'start': res[idx].get('starts_at'),
-                    'end' : res[idx].get('ends_at'),
-                    'expiry': res[idx].get('points_expire_after'),
-                    'business': data.get('user').get('employee_of')[0].get('name'),
-                    'currency': curr["currency"][0].get('label')}
-                    campaigns.append(d)
+            with open('campaigns.json', 'w', encoding='utf-8') as f:
+                f.write(json.dumps(campaigns, indent=4))
+
+            try:
+                with open('currency.json', 'r') as f:
+                    curr = json.loads(f.read())
+            except:
+                curr = ""
             
+            try:
+                with open("campaigns.json", 'r') as f:
+                    data = json.loads(f.read())
+            except:
+                data = ""
+
+            employee_struct = {}
+            for item in user_data.get('user').get('employee_of'):
+                employee_struct[item.get('id')] = item.get('name')
+            
+            currency_struct = {}
+            for item in curr['currency']:
+                currency_struct[item.get('id')] = item.get('label')
+
+            print(currency_struct)
+            camp = []
+            campaign = []
+            for item in data[0]:
+                if item.get('business') in employee_struct:
+                    campaign.append(item)
+                    d = {
+                        'id' : item.get('id'),
+                        'name': item.get('name'),
+                        'start': item.get('starts_at'),
+                        'end' : item.get('ends_at'),
+                        'expiry': item.get('points_expire_after'),
+                        'business': employee_struct[item.get('business')],
+                        'currency': currency_struct[item.get('currency')]
+                        }
+                    camp.append(d)
+
             with open('campaigns.json', 'w', encoding = 'utf-8') as f:
-                json.dump(campaigns, f, indent= 4)
-            print(campaigns)
-            table = CampaignTable(campaigns)
+                json.dump(campaign, f, indent= 4)
+            table = CampaignTable(camp)
             return render(request, 'rewards/rewards.html', {
             "title": "UB Loyalty | Currency",
             "table" : table 
         })
 
-    def post(self, request, *args, **kwargs):
+    def post(self, *args, **kwargs):
         pass
 
 class RulesView(View):
@@ -899,6 +918,7 @@ class CurrencyView(View):
         with open('data.json', 'r') as f:
             data = json.loads(f.read())
         
+
         token = data.get('token')
         tokenh = f"Token {token}"
 
@@ -907,26 +927,37 @@ class CurrencyView(View):
         if token:
             user_response = requests.get(CURRENCY_URL, headers = headers)
             res = json.loads(user_response.text)
-            categories = []
-
-            for idx, _ in enumerate(res):
-                temp = res[idx].get('business')
-                with open('data.json', 'r') as f:
-                    data = json.loads(f.read())
             
-                try:
-                    biz = data.get('user').get('employee_of')[0].get('id')
-                except IndexError:
-                    biz = ""
-
-                if temp == biz:
+            categories = []
+            currencies = {}
+            currencies['currency'] = []
+            currencies["currency"].append(res)
+            with open('currency.json', 'w', encoding='utf-8') as f:
+                f.write(json.dumps(currencies, indent=4))
+            
+            with open('currency.json', 'r') as f:
+                data = json.loads(f.read())
+            with open('data.json', 'r') as f:
+                user_data = json.loads(f.read())
+            
+            employee_struct = {}
+            for item in user_data.get('user').get('employee_of'):
+                #employee_struct.add(item.get('id'))
+                employee_struct[item.get('id')] = item.get('name')
+            
+            currency = {}
+            currency['currency'] = []
+            for item in data['currency'][0]:
+                if item.get('business') in employee_struct:
+                    currency['currency'].append(item)
                     d = {
-                    'label': res[idx].get('label'),
-                    'business' : data.get('user').get('employee_of')[0].get('name')
+                        'label': item.get('label'),
+                        'business' : employee_struct[item.get('business')]
                     }
                     categories.append(d)
-                
-
+            
+            with open('currency.json', 'w', encoding='utf-8') as f:
+                f.write(json.dumps(currency, indent=4))
             table = CurrencyTable(categories)
             return render(request, 'rewards/currency.html', {
             "title": "UB Loyalty | Currency",

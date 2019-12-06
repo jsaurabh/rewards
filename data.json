@@ -1,8 +1,8 @@
 {
-    "token": "0e144ddef0851a48abbc2c63a0dc54ddb20dcf90",
+    "token": "ae44a271165a7512ef8153c301aaf7cbc07e2657",
     "user": {
-        "id": 53,
-        "username": "UBDemoDay",
+        "id": 60,
+        "username": "UBDemoDay1",
         "first_name": "",
         "last_name": "",
         "email": "",
@@ -10,12 +10,12 @@
         "customer_of": [],
         "employee_of": [
             {
-                "id": 69,
+                "id": 71,
                 "name": "SPOT Coffee",
                 "is_published": true,
-                "phone": "",
-                "url": "",
-                "address": "",
+                "phone": "+17167170692",
+                "url": "http://www.example.org",
+                "address": "1 Privet Drive",
                 "logo": null
             }
         ]

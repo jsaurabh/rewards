@@ -1,13 +1,14 @@
 from django import forms
 from django.utils.safestring import mark_safe
 import json
+from bootstrap_datepicker_plus import DatePickerInput
 
 class AddCampaignForm(forms.Form):
     name = forms.CharField(label = mark_safe("<strong>*Campaign Name</strong>"), required = False, max_length=20, min_length=1)
 
-    starts_at = forms.DateTimeField(label = 'Start Date', required = False)
+    starts_at = forms.DateTimeField(label = 'Start Date', required = False, widget = DatePickerInput(format='%m/%d/%Y'))
     
-    ends_at = forms.DateTimeField(label = 'End Date', required = False)
+    ends_at = forms.DateTimeField(label = 'End Date', required = False, widget = DatePickerInput(format='%m/%d/%Y'))
 
     points_expire = forms.CharField(label = 'Points expire after', required = False, help_text = "Enter time(in days) that points will expire after")
     business = forms.ChoiceField(choices = [], help_text = "Choose a business")
@@ -20,14 +21,14 @@ class AddCampaignForm(forms.Form):
             'name': 'Campaign Name',
             'placeholder': 'Enter a name for the campaign'
         })
-        self.fields['starts_at'].widget.attrs.update({
-            'class': 'form-control',
-            'name': 'Start Date'
-        })
-        self.fields['ends_at'].widget.attrs.update({
-            'class': 'form-control',
-            'name': 'End Date'
-        })
+        # self.fields['starts_at'].widget.attrs.update({
+        #     'class': 'form-control',
+        #     'name': 'Start Date'
+        # })
+        # self.fields['ends_at'].widget.attrs.update({
+        #     'class': 'form-control',
+        #     'name': 'End Date'
+        # })
         self.fields['points_expire'].widget.attrs.update({
             'class': 'form-control',
             'name': 'Points Expiry Date'
@@ -83,9 +84,9 @@ class EditCampaignForm(forms.Form):
     choose_campaign = forms.ChoiceField(choices=[])
     name = forms.CharField(label = mark_safe("<strong>*Campaign Name</strong>"), required = False, max_length=20, min_length=1)
 
-    starts_at = forms.DateTimeField(label = 'Start Date', required = False)
+    starts_at = forms.DateTimeField(label = 'Start Date', required = False, widget = DatePickerInput(format='%m/%d/%Y'))
     
-    ends_at = forms.DateTimeField(label = 'End Date', required = False)
+    ends_at = forms.DateTimeField(label = 'End Date', required = False, widget = DatePickerInput(format='%m/%d/%Y'))
 
     points_expire = forms.CharField(label = 'Points expire after', required = False, help_text = "Enter time(in days) that points will expire after")
     business = forms.ChoiceField(choices = [], help_text = "Choose a business")
@@ -152,8 +153,6 @@ class EditCampaignForm(forms.Form):
             'class': 'form-control',
             'name': 'Currency ID'
         })
-
-
 
 class AddCurrencyForm(forms.Form):
     label = forms.CharField(label = mark_safe("<strong>*Currency Name</strong>"),

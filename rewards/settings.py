@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_tables2',
     'phonenumber_field',
-    'formtools'
+    'formtools',
+    'bootstrap4',
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
@@ -151,3 +153,8 @@ LOGIN_URL = "/accounts/login"
 # https://django-tables2.readthedocs.io/en/latest/pages/custom-rendering.html
 
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+
+# Bootstrap4 
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
