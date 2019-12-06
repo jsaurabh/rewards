@@ -1,8 +1,8 @@
 {
-    "token": "aae92600766a091403ee64df4bc312b79c30b927",
+    "token": "259b0b43bb3a2a9770d396d40a96d846675fc86c",
     "user": {
-        "id": 74,
-        "username": "UBDemoDay0",
+        "id": 80,
+        "username": "UBDemoD",
         "first_name": "",
         "last_name": "",
         "email": "",
@@ -10,13 +10,13 @@
         "customer_of": [],
         "employee_of": [
             {
-                "id": 114,
-                "name": "Craft Coffee House",
-                "is_published": true,
-                "phone": "+19199859999",
-                "url": "http://www.example.org",
-                "address": "1 Privet Drive",
-                "logo": null
+                "id": 129,
+                "name": "CCD",
+                "is_published": false,
+                "phone": "",
+                "url": "",
+                "address": "",
+                "logo": "https://webdev.cse.buffalo.edu/rewards/media/programs/businesses/logos/rules.png"
             }
         ]
     }

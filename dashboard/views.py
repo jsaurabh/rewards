@@ -59,9 +59,10 @@ class BusinessEditView(View):
         })
 
     def post(self, request, *args, **kwargs):
-        form = BusinessEditForm(request.POST)
+        form = BusinessEditForm(request.POST, request.FILES)
         if form.is_valid():
             print(form.cleaned_data)
+            logo = form.cleaned_data.get('logo')
             post_data = {
                 'id': form.cleaned_data.get('business'),
                 'name':form.cleaned_data.get('name'), 
@@ -69,7 +70,6 @@ class BusinessEditView(View):
                 'is_published': form.cleaned_data.get('publish'),
                 'url': form.cleaned_data.get('url'),
                 'address': form.cleaned_data.get('address'),
-                'logo': None
             }
             if post_data['phone']:
                 post_data['phone'] = post_data['phone'].as_e164
@@ -85,7 +85,7 @@ class BusinessEditView(View):
                 print("Got token")
                 tokenh = f"Token {token}"
                 headers = {"Authorization": tokenh}
-                response = requests.put(EDIT_URL, headers = headers, data = post_data)
+                response = requests.put(EDIT_URL, headers = headers, data = post_data, files = {"logo": logo})
                 res = json.loads(response.text)
                 print(res)
                 user_response = requests.get(USER_URL, headers = headers)
@@ -205,10 +205,10 @@ class BusinessCreate(View):
         })
 
     def post(self, request, *args, **kwargs):
-        form = BusinessCreationForm(request.POST)#, request.FILES)
+        form = BusinessCreationForm(request.POST, request.FILES)
         #print(request.FILES)
         print(form.is_valid())
-        #logo = request.FILES.get('logo')
+        logo = form.cleaned_data.get('logo')
         if form.is_valid():
             post_data = {
                 'name':form.cleaned_data.get('name'), 
@@ -237,7 +237,7 @@ class BusinessCreate(View):
                 headers = {"Authorization": tokenh}
                 
                 response = requests.post(CREATE_BUSINESS_URL,
-                    headers = headers, data = post_data)
+                    headers = headers, data = post_data, files = {"logo": logo})
                 user_response = requests.get(USER_URL, headers = headers)
                 print(user_response)
                 print(response.text)

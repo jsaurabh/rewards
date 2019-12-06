@@ -42,6 +42,7 @@ class UsersRegistrationForm(forms.Form):
 	last_Name = forms.CharField(label = "Last Name", required = False, max_length=150)
 	email = forms.EmailField(required = False, max_length = 254)
 	phone = PhoneNumberField(label = "Phone Number", required = False, region="US")
+	logo = forms.ImageField(required = False)
 
 	def __init__(self, *args, **kwargs):
 		super(UsersRegistrationForm, self).__init__(*args, **kwargs)

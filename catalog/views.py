@@ -73,10 +73,10 @@ class AddCategoryView(View):
 
     def post(self, request, *args, **kwargs):
 
-        form = AddCategoryForm(request.POST)
+        form = AddCategoryForm(request.POST, request.FILES)
         if form.is_valid():
             print("valid")
-        
+            logo = form.cleaned_data.get('logo')
             post_data = {
                 "name": form.cleaned_data.get('name'), 
                 "business": form.cleaned_data.get('business')
@@ -95,7 +95,7 @@ class AddCategoryView(View):
                 tokenh = f"Token {token}"
                 headers = {"Authorization": tokenh}
                 
-                response = requests.post(EDIT_URL, headers = headers, data = post_data)
+                response = requests.post(EDIT_URL, headers = headers, data = post_data, files = {"logo": logo})
                 res = json.loads(response.text)
 
                 if response.status_code == 400:
@@ -139,10 +139,11 @@ class EditCategoryView(View):
 
     def post(self, request, *args, **kwargs):
         
-        form = EditCategoryForm(request.POST)
+        form = EditCategoryForm(request.POST, request.FILES)
         if form.is_valid():
-            print("valid")
             id = form.cleaned_data.get('catalog_choice')
+            logo = form.cleaned_data.get('logo')
+
             post_data = {
                 "name": form.cleaned_data.get('name'), 
                 "business": form.cleaned_data.get('business')
@@ -160,7 +161,7 @@ class EditCategoryView(View):
                 tokenh = f"Token {token}"
                 headers = {"Authorization": tokenh}
                 print(post_data)
-                response = requests.put(EDIT_URL, headers = headers, data = post_data)
+                response = requests.put(EDIT_URL, headers = headers, data = post_data, files = {"logo": logo})
                 res = json.loads(response.text)
                 #print(response)
                 #print(res)
@@ -276,14 +277,14 @@ class AddItemsView(View):
     def post(self, request, *args, **kwargs):
         with open('data.json', 'r') as f:
             data = json.loads(f.read())
-        form = AddItems(request.POST)
+        form = AddItems(request.POST, request.FILES)
         if form.is_valid():
             print("valid")
-        
+
+            image = form.cleaned_data.get('logo')
             post_data = {
                 "name": form.cleaned_data.get('name'),
                 "image": None,
-                #"image": form.cleaned_data.get('image'),
                 "category": form.cleaned_data.get("category")
             }
             
@@ -298,7 +299,7 @@ class AddItemsView(View):
                 tokenh = f"Token {token}"
                 headers = {"Authorization": tokenh}
                 print(post_data)
-                response = requests.post(EDIT_URL, headers = headers, data = post_data)
+                response = requests.post(EDIT_URL, headers = headers, data = post_data, files = {"logo": image})
                 res = json.loads(response.text)
                 print(response)
                 print(res)
@@ -343,14 +344,14 @@ class EditItemsView(View):
 
     def post(self, request, *args, **kwargs):
         
-        form = EditItems(request.POST)
+        form = EditItems(request.POST, request.FILES)
         if form.is_valid():
             print("valid")
             id = form.cleaned_data.get('item_choice')
+            image = form.cleaned_data.get('logo')
+            
             post_data = {
                 "name": form.cleaned_data.get('name'),
-                "image": None,
-                #"image": form.cleaned_data.get('image'),
                 "category": form.cleaned_data.get("category")
             }
             
@@ -365,7 +366,7 @@ class EditItemsView(View):
                 tokenh = f"Token {token}"
                 headers = {"Authorization": tokenh}
                 print(post_data)
-                response = requests.put(EDIT_URL, headers = headers, data = post_data)
+                response = requests.put(EDIT_URL, headers = headers, data = post_data, files = {"logo": image})
                 res = json.loads(response.text)
                 #print(response)
                 #print(res)

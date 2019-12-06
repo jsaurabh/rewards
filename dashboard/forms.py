@@ -9,7 +9,7 @@ class BusinessCreationForm(forms.Form):
     phone = PhoneNumberField(label = "Phone Number", required = False, region="US")
     url = forms.URLField(label = "URL", help_text = "Enter a web address", max_length = 200, required = False)
     address = forms.CharField(label = "Business Address", required = False)
-    #logo = forms.ImageField(help_text = "Upload a logo for your business", required = False)
+    logo = forms.ImageField(help_text = "Upload a logo for your business", required = False)
     #publish = forms.BooleanField(required=False)
     
     def __init__(self, *args, **kwargs):
@@ -36,10 +36,10 @@ class BusinessCreationForm(forms.Form):
         #     'name': "URL",
         #     'style': 'width:20px;height:20px'
         # })
-        # self.fields['logo'].widget.attrs.update({
-        #     'class': 'form-control',
-        #     'name': "Choose Logo"
-        # })
+        self.fields['logo'].widget.attrs.update({
+            'class': 'form-control',
+            'name': "Upload logo"
+        })
 
     def clean(self, *args, **kwargs):
         name = self.cleaned_data.get("name")
@@ -81,7 +81,7 @@ class BusinessEditForm(forms.Form):
     phone = PhoneNumberField(label = "Phone Number", required = False, region="US")
     url = forms.URLField(label = "URL", help_text = "Enter a web address", max_length = 200, required = False)
     address = forms.CharField(label = "Business Address", required = False)
-    #logo = forms.ImageField(help_text = "Upload a logo for your business", required = False)
+    logo = forms.ImageField(help_text = "Upload a logo for your business", required = False)
     publish = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
@@ -113,10 +113,10 @@ class BusinessEditForm(forms.Form):
             'class': 'form-control',
             'name': "URL"
         })
-        # self.fields['logo'].widget.attrs.update({
-        #     'class': 'form-control',
-        #     'name': "Choose Logo"
-        # })
+        self.fields['logo'].widget.attrs.update({
+            'class': 'form-control',
+            'name': "Upload logo"
+        })
 
     def clean(self, *args, **kwargs):
         #id = self.cleaned_data.get('business')

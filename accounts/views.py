@@ -66,23 +66,25 @@ class RegisterView(View):
         })
     
     def post(self, request, *args, **kwargs):
-        form = UsersRegistrationForm(request.POST)
+        form = UsersRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             phone = form.cleaned_data.get('phone')
             if phone:
                 number = phone.as_e164
             else:
                 number = ""
+            logo = form.cleaned_data.get('logo')
+
             post_data = {
                 'username': form.cleaned_data.get("username"),
                 'password': form.cleaned_data.get("password"),
                 'firstName' : form.cleaned_data.get("password"),
                 'lastName': form.cleaned_data.get("lastName"),
                 'email': form.cleaned_data.get("email"),
-                'phone' : number
+                'phone' : number,
             } 
-            response = requests.post(REGISTER_URL, data = post_data)
-            user_response = requests
+            response = requests.post(REGISTER_URL, data = post_data, files = {"logo": logo})
+            #user_response = requests
             with open('data.json', 'w', encoding='utf-8') as f:
                 json.dump(json.loads(response.text), f, indent=4)
             res = json.loads(response.text)

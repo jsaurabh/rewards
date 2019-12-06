@@ -32,7 +32,7 @@ window.onload = function() {
                   {% endfor %}
                 </div>
               {% endif %}
-              <form method = "post" class="user" novalidate>
+              <form method = "post" class="user" enctype = "multipart/form-data" novalidate>
                   {% csrf_token %}
                   {% for field in form.visible_fields %}
                   <div class="form-group">

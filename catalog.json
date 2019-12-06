@@ -1,47 +1,8 @@
 [
     {
-        "id": 66,
+        "id": 73,
         "items": [],
-        "name": "Beverages",
-        "business": 114
-    },
-    {
-        "id": 67,
-        "items": [
-            {
-                "id": 46,
-                "name": "Coffee",
-                "image": null,
-                "category": 67
-            }
-        ],
-        "name": "Hot Beverages",
-        "business": 114
-    },
-    {
-        "id": 68,
-        "items": [
-            {
-                "id": 47,
-                "name": "Iced Tea",
-                "image": null,
-                "category": 68
-            }
-        ],
-        "name": "Cold Beverages",
-        "business": 114
-    },
-    {
-        "id": 69,
-        "items": [
-            {
-                "id": 48,
-                "name": "T Shirt",
-                "image": null,
-                "category": 69
-            }
-        ],
-        "name": "Misc",
-        "business": 114
+        "name": "Bev",
+        "business": 129
     }
 ]

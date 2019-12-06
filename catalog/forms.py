@@ -14,6 +14,7 @@ class AddCategoryForm(forms.Form):
                            max_length=20, min_length=1, required = False, help_text = "Choose a name for the catalog")
     
     business = forms.ChoiceField(choices=[])
+    logo = forms.ImageField(help_text = "Upload logo for the category", required = False)
 
     def __init__(self, *args, **kwargs):
         super(AddCategoryForm, self).__init__(*args, **kwargs)
@@ -35,6 +36,10 @@ class AddCategoryForm(forms.Form):
             'name': 'Business Name',
         })
 
+        self.fields['logo'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Choose logo',
+        })
     def clean(self, *args, **kwargs):
         name = self.cleaned_data.get("name")
         
@@ -73,6 +78,7 @@ class EditCategoryForm(forms.Form):
                            max_length=20, min_length=1, required = False, help_text = "Choose a name for the catalog")
     
     business = forms.ChoiceField(choices=[])
+    logo = forms.ImageField(help_text = "Upload logo for the category", required = False)
 
     def __init__(self, *args, **kwargs):
         super(EditCategoryForm, self).__init__(*args, **kwargs)
@@ -109,6 +115,11 @@ class EditCategoryForm(forms.Form):
             'name': 'Business Name',
         })
 
+        self.fields['logo'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Choose logo',
+        })
+
     def clean(self, *args, **kwargs):
         name = self.cleaned_data.get("name")
         
@@ -121,7 +132,7 @@ class AddItems(forms.Form):
     name = forms.CharField(label = mark_safe("<strong>*Item Name</strong>"),
                            max_length=50, min_length=1, required = False, help_text = "Enter name for the item")
     
-    #image = forms.ImageField(allow_empty_file=True)
+    logo = forms.ImageField(help_text = "Upload logo for the category", required = False)
     category = forms.ChoiceField(choices=[])
 
     def __init__(self, *args, **kwargs):
@@ -132,10 +143,10 @@ class AddItems(forms.Form):
             'placeholder':'Item Name'
         })
 
-        # self.fields['image'].widget.attrs.update({
-        #     'class': 'form-control',
-        #     'name': 'Business Name'
-        # })
+        self.fields['logo'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Choose logo',
+        })
         with open('catalog.json', 'r') as f:
             data = json.loads(f.read())
         
@@ -171,7 +182,7 @@ class EditItems(forms.Form):
     name = forms.CharField(label = mark_safe("<strong>*Item Name</strong>"),
                            max_length=50, min_length=1, required = False, help_text = "Enter name for the item")
     
-    #image = forms.ImageField(allow_empty_file=True)
+    logo = forms.ImageField(help_text = "Upload logo for the category", required = False)
     
 
     def __init__(self, *args, **kwargs):
@@ -214,11 +225,10 @@ class EditItems(forms.Form):
             'placeholder':'Item Name'
         })
 
-        # self.fields['image'].widget.attrs.update({
-        #     'class': 'form-control',
-        #     'name': 'Business Name'
-        # })
-
+        self.fields['logo'].widget.attrs.update({
+            'class': 'form-control',
+            'name': 'Choose logo',
+        })
 
     def clean(self, *args, **kwargs):
         name = self.cleaned_data.get("name")
