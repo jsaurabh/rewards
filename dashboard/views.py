@@ -313,7 +313,7 @@ class FormWizardView(SessionWizardView):
         biz = res.get('id')
         print(biz)
 
-        r = requests.get(url = "http://127.0.0.1:8000/rewards/currency")
+        r = requests.get(url = "localhost:8000/rewards/currency")
 
         with open('currency.json', 'r') as f:
             data = json.loads(f.read())
