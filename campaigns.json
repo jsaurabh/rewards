@@ -1,11 +1,20 @@
 [
     {
-        "id": 51,
-        "name": "XMAS",
-        "starts_at": "2019-12-07T00:00:00-05:00",
-        "ends_at": "2020-01-01T00:00:00-05:00",
+        "id": 94,
+        "name": "Saurabh rewards",
+        "starts_at": null,
+        "ends_at": null,
         "points_expire_after": null,
-        "business": 71,
-        "currency": 91
+        "business": 104,
+        "currency": 125
+    },
+    {
+        "id": 95,
+        "name": "Saurabh Campaign",
+        "starts_at": null,
+        "ends_at": null,
+        "points_expire_after": null,
+        "business": 104,
+        "currency": 125
     }
 ]
