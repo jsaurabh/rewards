@@ -313,7 +313,7 @@ class FormWizardView(SessionWizardView):
         biz = res.get('id')
         print(biz)
 
-        r = requests.get(url = "localhost:8000/rewards/currency")
+        r = requests.get(url = "young-ravine-99554.herokuapp.com/rewards/currency")
 
         with open('currency.json', 'r') as f:
             data = json.loads(f.read())
