@@ -1,8 +1,8 @@
 {
-    "token": "ae44a271165a7512ef8153c301aaf7cbc07e2657",
+    "token": "aae92600766a091403ee64df4bc312b79c30b927",
     "user": {
-        "id": 60,
-        "username": "UBDemoDay1",
+        "id": 74,
+        "username": "UBDemoDay0",
         "first_name": "",
         "last_name": "",
         "email": "",
@@ -10,12 +10,12 @@
         "customer_of": [],
         "employee_of": [
             {
-                "id": 104,
-                "name": "Saurabh",
-                "is_published": false,
-                "phone": "",
-                "url": "",
-                "address": "",
+                "id": 114,
+                "name": "Craft Coffee House",
+                "is_published": true,
+                "phone": "+19199859999",
+                "url": "http://www.example.org",
+                "address": "1 Privet Drive",
                 "logo": null
             }
         ]

@@ -21,7 +21,7 @@ class CampaignTable(tables.Table):
 
 class AccRulesTable(tables.Table):
     row_number = tables.Column(empty_values=(), verbose_name= "Sr. No")
-    value = tables.Column(verbose_name= 'Value($)')
+    value = tables.Column(verbose_name= 'Value')
     campaign = tables.Column(verbose_name= 'Campaign')
     category = tables.Column(verbose_name= 'Category')
     item = tables.Column(verbose_name= 'Item')
@@ -41,7 +41,7 @@ class RedRulesTable(tables.Table):
     row_number = tables.Column(empty_values=(), verbose_name= "Sr. No")
     reward = tables.Column(verbose_name= 'Reward')
     #image = tables.Column(verbose_name= 'Campaign ID')
-    value = tables.Column(verbose_name= 'Value($)')
+    value = tables.Column(verbose_name= 'Value')
     campaign = tables.Column(verbose_name= 'Campaign')
     
     def __init__(self, *args, **kwargs):

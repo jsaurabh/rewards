@@ -1,11 +1,18 @@
 {
     "currency": [
         {
-            "id": 125,
+            "id": 135,
             "singular_label": "Points",
             "plural_label": "Points",
             "label": "Points",
-            "business": 104
+            "business": 114
+        },
+        {
+            "id": 136,
+            "singular_label": "XMAS",
+            "plural_label": "XMAS",
+            "label": "XMAS",
+            "business": 114
         }
     ]
 }

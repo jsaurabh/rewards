@@ -39,16 +39,13 @@ class BusinessView(View):
             try:
                 businesses = res.get('employee_of')
             except:
-                businesses = {}
+                businesses = []
             table = NameTable(businesses)
             return render(request, 'business.html', {
             "title": "UB Loyalty | Business",
             "table" : table 
         })
-
-        # return render(request, 'business.html', {
-        #     "title": "UB Loyalty | Business", 
-        # })
+        
     def post(self, request, *args, **kwargs):
         pass
 
@@ -74,7 +71,9 @@ class BusinessEditView(View):
                 'address': form.cleaned_data.get('address'),
                 'logo': None
             }
-            post_data['phone'] = post_data['phone'].as_e164
+            if post_data['phone']:
+                post_data['phone'] = post_data['phone'].as_e164
+            #post_data['phone'] = post_data['phone'].as_e164
             with open('data.json', 'r') as f:
                 data = json.loads(f.read())
             
