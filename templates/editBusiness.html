@@ -1,0 +1,83 @@
+{% extends 'accounts_base.html' %}
+{% load static %}
+{% block content %}
+{% load widget_tweaks %}
+<script>
+  $(document).ready(function() {
+    var items;
+
+    $.getJSON('../../../data.json', function(data) {
+      $.each(data.items, function(key, val) {
+        alert(val)
+      })
+    })
+  })
+</script>
+  <div class="container">
+
+    <div class="card o-hidden border-0 shadow-lg my-5">
+      <div class="card-body p-0">
+        <div class="row">
+          <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+          <div class="col-lg-7">
+            <div class="p-5">
+              <div class="text-center">
+                <h1 class="h4 text-gray-900 mb-4">Edit Business</h1>
+              </div>
+              {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      {{ error }}
+    {% endfor %}
+  </div>
+{% endif %}
+                  <form method="post" class="user" novalidate>
+                    {% csrf_token %}
+                    {% for field in form.visible_fields %}
+  <div class="form-group">
+      <!-- <p> -->
+        {% if field.field.required %}
+            <strong>
+                *{{ field.label_tag }}                  
+            </strong>
+        {% else %}
+            {{ field.label_tag }}
+        {% endif %}
+
+        {% if field.errors %}
+        {% render_field field class="form-control is-invalid" %}
+        {% for error in field.errors %}
+          <small class="form-text text-danger">
+            {{ error }}
+          </small>
+        {% endfor %}
+      {% else %}
+        {% render_field field class="form-control" %}
+      {% endif %}
+      {% if field.help_text %}
+        <small class="form-text text-info">
+          {{ field.help_text }}
+        </small>
+      {% endif %}
+    <!-- </p> -->
+  </div>
+  {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                      Edit Business</button>
+                  </form>
+              <hr>
+              <div class="text-center">
+                <a class="small" href="/dashboard/business">Back to Dashboard?</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

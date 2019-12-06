@@ -1,7 +1,17 @@
 {% extends 'accounts_base.html' %}
 {% load static %}
 {% block content %}
+{% load widget_tweaks %}
 
+<script>
+window.onload = function() {
+ const myInput = document.getElementById('id_confirm_password');
+ myInput.onpaste = function(e) {
+   e.preventDefault();
+ }
+}
+
+</script>
   <div class="container">
 
     <div class="card o-hidden border-0 shadow-lg my-5">
@@ -14,10 +24,49 @@
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
               </div>
-              <form method = "post" class="user">
+       
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                  {% for error in form.non_field_errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <form method = "post" class="user" novalidate>
                   {% csrf_token %}
-                <div class="form-group">
-                  {{ form.as_p }}
+                  {% for field in form.visible_fields %}
+                  <div class="form-group">
+                    <p>
+                    {% if field.field.required %}
+                    <strong>
+                        *{{ field.label_tag }}                  
+                    </strong>
+                      
+                    {%else %}
+                      {{ field.label_tag }}
+                    {% endif %}
+                    
+                      {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" %}
+                        {% for error in field.errors %}
+                          <!-- <div class="invalid-feedback"> -->
+                            <small class="form-text text-danger">
+                                  {{ error }}
+                            </small>
+                          <!-- </div> -->
+                        {% endfor %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                    {% if field.help_text %}
+                      <small class="form-text text-info">
+                        {{ field.help_text }}
+                      </small>
+                    {% endif %}
+                  </p>
+                    </div>
+                    {% endfor %}
+            
                 <button type="submit" class= "btn btn-primary btn-user btn-block">
                   Register Account</button>
               </form>

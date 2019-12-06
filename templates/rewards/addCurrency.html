@@ -1,0 +1,34 @@
+{% extends 'accounts_base.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="container">
+
+    <div class="card o-hidden border-0 shadow-lg my-5">
+      <div class="card-body p-0">
+        <div class="row">
+          <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+          <div class="col-lg-7">
+            <div class="p-5">
+              <div class="text-center">
+                <h1 class="h4 text-gray-900 mb-4">Add Currency</h1>
+              </div>
+
+              <form method="post" class="user" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {% include 'form.html' with form=form %}
+                <button type="submit" class="btn btn-primary btn-user btn-block">
+                  Add</button>
+                  </form>
+              <hr>
+              <div class="text-center">
+                <a class="small" href="/rewards/currency">Back to Dashboard?</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
