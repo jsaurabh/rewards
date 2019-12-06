@@ -33,6 +33,7 @@ DEBUG = True
 #DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ['young-ravine-99554.herokuapp.com']
+ALLOWED_HOSTS = ['ubloyalty.herokuapp.com']
 
 # Application definition
 INSTALLED_APPS = [
