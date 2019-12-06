@@ -1,11 +1,1 @@
-[
-    {
-        "id": 105,
-        "name": "Rewards",
-        "starts_at": "2019-12-06T00:00:00-05:00",
-        "ends_at": "2019-12-26T00:00:00-05:00",
-        "points_expire_after": null,
-        "business": 114,
-        "currency": 136
-    }
-]
+[]

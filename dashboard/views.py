@@ -294,7 +294,9 @@ class FormWizardView(SessionWizardView):
 
         if form_data[0].get('phone'):
             form_data[0]['phone'] = form_data[0].get('phone').as_e164
-    
+
+        # logo = form_data[0].cleaned_data.get('logo')
+
         response = requests.post(CREATE_BUSINESS_URL,
                     headers = headers, data = form_data[0])
         user_response = requests.get(USER_URL, headers = headers)

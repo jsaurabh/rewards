@@ -157,10 +157,6 @@ class BusinessCreateWizard(forms.Form):
             'class': 'form-control',
             'name': "URL"
         })
-        # self.fields['logo'].widget.attrs.update({
-        #     'class': 'form-control',
-        #     'name': "Choose Logo"
-        # })
 
     def clean(self, *args, **kwargs):
         name = self.cleaned_data.get("name")

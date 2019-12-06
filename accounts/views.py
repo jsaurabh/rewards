@@ -101,10 +101,10 @@ class RegisterView(View):
             if response.status_code == 200:
                 try:
                     userobj = U.objects.create_superuser(post_data['username'], post_data['email'], post_data['password'])
-                    return redirect('/accounts/login/')
-                    # return render(request, "accounts/login.html", {
-                    #     "form": UsersLoginForm()
-                    # })
+                    # return redirect('/accounts/login/')
+                    # # return render(request, "accounts/login.html", {
+                    # #     "form": UsersLoginForm()
+                    # # })
                 except:
                     form.add_error(None, "User could not be created")
                     print("Superuser can't be created")
@@ -112,21 +112,21 @@ class RegisterView(View):
                         "form":form,
                         "title": "Register"
                         })
-                # token = res.get('token')
-                # if token:
-                #     try:
-                #         user = authenticate(username = post_data['username'], password = post_data['password'])
-                #         login(request, user)
-                #         if res.get('user').get('employee_of') is None:
-                #             return HttpResponseRedirect("/dashboard/wizard")
-                #         else:
-                #             return HttpResponseRedirect("/dashboard")
-                #     except:
-                #         print("Unable to log user in with provided credentials")
-                #         form.add_error(request, "Unable to log in with provided credentials")
-                #         return render(request, "accounts/login.html", {
-                #         "form":form
-                #         })
+                token = res.get('token')
+                if token:
+                    try:
+                        user = authenticate(username = post_data['username'], password = post_data['password'])
+                        login(request, user)
+                        if res.get('user').get('employee_of') is None:
+                            return HttpResponseRedirect("/dashboard/wizard")
+                        else:
+                            return HttpResponseRedirect("/dashboard")
+                    except:
+                        print("Unable to log user in with provided credentials")
+                        form.add_error(request, "Unable to log in with provided credentials")
+                        return render(request, "accounts/login.html", {
+                        "form":form
+                        })
                     
         return render(request, "accounts/register.html", {
             "form":form, 
