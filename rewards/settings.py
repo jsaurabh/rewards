@@ -32,8 +32,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&
 DEBUG = True
 #DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['young-ravine-99554.herokuapp.com']
-ALLOWED_HOSTS = ['ubloyalty.herokuapp.com']
+# ALLOWED_HOSTS = ['ubloyalty.herokuapp.com']
+ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
