@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: rewards
+      MYSQL_ROOT_PASSWORD: iAmASecret
+  web:
+    build: .
+    image: drp/httpd
+    ports:
+      - "80:80"
+    volumes:
+      - ./api/drp:/data/web/rewards/api/drp
