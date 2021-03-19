@@ -23,7 +23,7 @@ lazy-object-proxy==1.4.2
 MarkupSafe==1.1.1
 mccabe==0.6.1
 phonenumbers==8.10.23
-Pillow==6.2.1
+Pillow==8.1.1
 psycopg2-binary==2.8.4
 pylint==2.4.3
 pytz==2019.3
